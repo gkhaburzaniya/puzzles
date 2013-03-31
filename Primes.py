@@ -8,7 +8,7 @@ def is_prime(n):
         return True
     if n % 2 == 0:
         return False
-    for i in range(3, int(sqrt(n)+2), 2):
+    for i in range(3, round(sqrt(n)) + 1, 2):
         if n % i == 0:
             return False
     return True
@@ -31,27 +31,29 @@ def low_prime(n):
     if n < 2:
         #Integers smaller than 2 do not have prime factors
         return None
-    for i in range(2, int(sqrt(n) + 2)):
+    if n % 2 == 0:
+        return 2
+    for i in range(3, round(sqrt(n)) + 1, 2):
         if n % i == 0 and is_prime(i):
             return i
     return n
 
 def primes_below(n):
     """Returns a list of all prime numbers below passed integer."""
-    L, M = [2], [x for x in range(3, n, 2)]
+    L, M = [2], [x for x in range(n)]
     if n <= 2:
         #There are no primes below 2
-        return None
+        return []
     for i in range(3, n, 2):
-        if M[i // 2 - 1] != 0 and is_prime(i):
+        if M[i] != 0 and is_prime(i):
             L.append(i)
-            for j in range(i, n, 2 * i):
-                M[j // 2 - 1] = 0
+            for j in range(i, n, i):
+                M[j] = 0
     return L
 
 def prime_factors(n):
     """Returns a list of all prime factors of passed integer."""
-    #Integers smaller than 2 and non-integers do not have prime factors
+    #Integers smaller than 2 do not have prime factors
     L = []
     while n >= 2:
         i = low_prime(n)
