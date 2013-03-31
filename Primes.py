@@ -1,6 +1,6 @@
 from math import sqrt
 def is_prime(n):
-    """Returns True if passed integer is a prime. False otherwise."""
+    """Return True if passed integer is a prime. False otherwise."""
     if n < 2:
         #Integers smaller than 2 are not prime.
         return False
@@ -14,7 +14,7 @@ def is_prime(n):
     return True
 
 def lcm(L):
-    """Returns least common multiple of passed list."""
+    """Return least common multiple of passed list."""
     lcm, M = 1, []
     for i in L:
         for j in M:
@@ -27,7 +27,7 @@ def lcm(L):
     return lcm
 
 def low_prime(n):
-    """Returns smallest prime factor of passed integer."""
+    """Return smallest prime factor of passed integer."""
     if n < 2:
         #Integers smaller than 2 do not have prime factors
         return None
@@ -39,7 +39,7 @@ def low_prime(n):
     return n
 
 def primes_below(n):
-    """Returns a list of all prime numbers below passed integer."""
+    """Return a list of all prime numbers below passed integer."""
     L, M = [2], [x for x in range(n)]
     if n <= 2:
         #There are no primes below 2
@@ -52,7 +52,7 @@ def primes_below(n):
     return L
 
 def prime_factors(n):
-    """Returns a list of all prime factors of passed integer."""
+    """Return a list of all prime factors of passed integer."""
     #Integers smaller than 2 do not have prime factors
     L = []
     while n >= 2:
