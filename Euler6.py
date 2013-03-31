@@ -8,4 +8,4 @@ if True:
     sumofsquares = sum(L)
     answer = squareofsum - sumofsquares
     print(answer)
-    input("Press ENTER")
+    raw_input("Press ENTER")

@@ -50,4 +50,4 @@ if True:
             if answer < max(temp1, temp2, temp3, temp4):
                 answer = max(temp1, temp2, temp3, temp4)
     print(answer)
-    input("Press ENTER")
+    raw_input("Press ENTER")

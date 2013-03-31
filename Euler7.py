@@ -8,4 +8,4 @@ if True:
         if is_prime(answer):
             i += 1
     print(answer)
-    input("Press ENTER")
+    raw_input("Press ENTER")

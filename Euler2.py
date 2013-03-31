@@ -7,4 +7,4 @@ if True:
         if n1 % 2 == 0:
             answer += n1
     print(answer)
-    input('Press ENTER')
+    raw_input('Press ENTER')

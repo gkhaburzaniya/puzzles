@@ -18,4 +18,4 @@ if True:
                 divisors, increase = 2 * divisors + 1, divisors + 1
         divisors += 1
     print(answer)
-    input("Press ENTER")
+    raw_input("Press ENTER")

@@ -102,4 +102,4 @@ if True:
     
     answer = str(sum(target))
     print(answer[0:10])
-    input("Press ENTER")
+    raw_input("Press ENTER")

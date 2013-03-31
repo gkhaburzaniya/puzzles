@@ -7,4 +7,4 @@ if True:
             matrix.append((i, j))
     for i in range(target**2):
         S = {(1, 1)}
-    input("Press ENTER")
+    raw_input("Press ENTER")

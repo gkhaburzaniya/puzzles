@@ -8,4 +8,4 @@ if True:
             break
         target //= low_prime(target)
     print(answer)
-    input('Press ENTER')
+    raw_input('Press ENTER')

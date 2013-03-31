@@ -21,4 +21,4 @@ if True:
         if temp > answer:
             answer = temp
     print(answer)
-    input("Press ENTER")
+    raw_input("Press ENTER")

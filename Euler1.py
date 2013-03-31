@@ -6,4 +6,4 @@ if True:
         if i % divisor1 == 0 or i % divisor2 == 0:
             answer += i
     print(answer)
-    input("Press ENTER")
+    raw_input("Press ENTER")

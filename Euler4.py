@@ -17,4 +17,4 @@ if True:
         if i < lowest:
             break
     print(answer)
-    input("Press ENTER")
+    raw_input("Press ENTER")

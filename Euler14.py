@@ -17,4 +17,4 @@ if True:
             maxlength = length
             answer = i
     print(answer)
-    input("Press ENTER")
+    raw_input("Press ENTER")

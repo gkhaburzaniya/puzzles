@@ -4,4 +4,4 @@ if True:
     from Primes import primes_below
     answer = sum(primes_below(target))
     print(answer)
-    input("Press ENTER")
+    raw_input("Press ENTER")

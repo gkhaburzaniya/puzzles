@@ -11,4 +11,4 @@ if True:
         if answer != 0:
             break
     print(answer)
-    input("Press ENTER")
+    raw_input("Press ENTER")
