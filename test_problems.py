@@ -51,5 +51,8 @@ class EulerTest(TestCase):
     def test_problem14(self):
         verify_problem(14, 837799)
 
+    def test_problem15(self):
+        verify_problem(15, 137846528820)
+
 if __name__ == "__main__":
     main()
