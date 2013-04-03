@@ -1,8 +1,9 @@
 target = 20
 
-matrix = [[1 for x in range(target + 1)] for x in range(target + 1)]
+from matrix import matrix
+M = matrix(target + 1, target + 1, 1)
 for i in range(1, target + 1):
     for j in range(1, target + 1):
-        matrix[i][j] = matrix[i - 1][j] + matrix[i][j - 1]
-answer = matrix[target][target]
+        M[i][j] = M[i - 1][j] + M[i][j - 1]
+answer = M[target][target]
 print(answer)
