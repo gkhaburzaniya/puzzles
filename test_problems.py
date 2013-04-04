@@ -1,10 +1,33 @@
 from unittest import TestCase, main
 
+from matrix import matrix
+
 
 def verify_problem(num, expected_answer):
     module = __import__("Euler{0}".format(num))
     assert module.answer == expected_answer, "{0} != {1}".format(
         module.answer, expected_answer)
+
+
+class MatrixTest(TestCase):
+
+    def test_matrix_with_function(self):
+        self.assertEqual(matrix(2, 2, lambda x, y: (x, y)), [
+            [(0, 0), (1, 0)],
+            [(0, 1), (1, 1)],
+        ])
+
+    def test_matrix_with_constant(self):
+        self.assertEqual(matrix(2, 2, lambda x, y: 8), [
+            [8, 8],
+            [8, 8],
+        ])
+
+    def test_matrix_with_missing_argument(self):
+        self.assertEqual(matrix(2, 2), [
+            [None, None],
+            [None, None],
+        ])
 
 
 class EulerTest(TestCase):
@@ -59,6 +82,7 @@ class EulerTest(TestCase):
 
     def test_problem17(self):
         verify_problem(17, 21124)
+
 
 if __name__ == "__main__":
     main()
