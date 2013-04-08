@@ -1,6 +1,6 @@
 target = 500
 
-from Primes import prime_factors
+from primes import prime_factors
 answer, divisors, i = 0, 0, 1
 while divisors <= target:
     answer += i
