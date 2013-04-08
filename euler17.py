@@ -1,73 +1,73 @@
 target = 1000
-
-answer = 0
+temp = 0
 for i in range (1, target + 1):
-    L = [int(x) for x in str(i)]
-    L.reverse()
-    L = list(enumerate(L))
+    digits = [int(x) for x in str(i)]
+    digits.reverse()
+    digits = list(enumerate(digits))
 
     if i == 1000:
-        answer += len('thousand')
+        temp += len('thousand')
     elif i >= 100:
-        answer += len('hundred')
-        if L[0][1] != 0 or L[1][1] != 0:
-            answer += len('and')
-    if i >= 10 and L[1][1] == 1:
-        if L[0][1] == 0:
-            answer += len('ten')
-        elif L[0][1] == 1:
-            answer += len('eleven')
-        elif L[0][1] == 2:
-            answer += len('twelve')
-        elif L[0][1] == 3:
-            answer += len('thirteen')
-        elif L[0][1] == 4:
-            answer += len('fourteen')
-        elif L[0][1] == 5:
-            answer += len('fifteen')
-        elif L[0][1] == 6:
-            answer += len('sixteen')
-        elif L[0][1] == 7:
-            answer += len('seventeen')
-        elif L[0][1] == 8:
-            answer += len('eighteen')
-        elif L[0][1] == 9:
-            answer += len('nineteen')
-    for j in L:
-        if j[0] >= 2 or len(L) < 2 or (j[0] != 1 and L[1][1] != 1):
+        temp += len('hundred')
+        if digits[0][1] != 0 or digits[1][1] != 0:
+            temp += len('and')
+    if i >= 10 and digits[1][1] == 1:
+        if digits[0][1] == 0:
+            temp += len('ten')
+        elif digits[0][1] == 1:
+            temp += len('eleven')
+        elif digits[0][1] == 2:
+            temp += len('twelve')
+        elif digits[0][1] == 3:
+            temp += len('thirteen')
+        elif digits[0][1] == 4:
+            temp += len('fourteen')
+        elif digits[0][1] == 5:
+            temp += len('fifteen')
+        elif digits[0][1] == 6:
+            temp += len('sixteen')
+        elif digits[0][1] == 7:
+            temp += len('seventeen')
+        elif digits[0][1] == 8:
+            temp += len('eighteen')
+        elif digits[0][1] == 9:
+            temp += len('nineteen')
+    for j in digits:
+        if j[0] >= 2 or len(digits) < 2 or (j[0] != 1 and digits[1][1] != 1):
             if j[1] == 1:
-                answer += len('one')
+                temp += len('one')
             elif j[1] == 2:
-                answer += len('two')
+                temp += len('two')
             elif j[1] == 3:
-                answer += len('three')
+                temp += len('three')
             elif j[1] == 4:
-                answer += len('four')
+                temp += len('four')
             elif j[1] == 5:
-                answer += len('five')
+                temp += len('five')
             elif j[1] == 6:
-                answer += len('six')
+                temp += len('six')
             elif j[1] == 7:
-                answer += len('seven')
+                temp += len('seven')
             elif j[1] == 8:
-                answer += len('eight')
+                temp += len('eight')
             elif j[1] == 9:
-                answer += len('nine')
-        elif L[1][1] != 1:
+                temp += len('nine')
+        elif digits[1][1] != 1:
             if j[1] == 2:
-                answer += len('twenty')
+                temp += len('twenty')
             elif j[1] == 3:
-                answer += len('thirty')
+                temp += len('thirty')
             elif j[1] == 4:
-                answer += len('forty')
+                temp += len('forty')
             elif j[1] == 5:
-                answer += len('fifty')
+                temp += len('fifty')
             elif j[1] == 6:
-                answer += len('sixty')
+                temp += len('sixty')
             elif j[1] == 7:
-                answer += len('seventy')
+                temp += len('seventy')
             elif j[1] == 8:
-                answer += len('eighty')
+                temp += len('eighty')
             elif j[1] == 9:
-                answer += len('ninety')
+                temp += len('ninety')
+answer = temp
 print(answer)

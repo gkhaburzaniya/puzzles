@@ -1,4 +1,3 @@
 from timeit import timeit
 
-i = input("Which problem do you want to test?")
-print(timeit('import euler' + i, number = 1))
+print(timeit('import euler' + input("Test which problem?"), number=1))

@@ -1,19 +1,19 @@
-target = 500
-
 from primes import prime_factors
-answer, divisors, i = 0, 0, 1
+
+target = 500
+temp, divisors, i = 0, 0, 1
 while divisors <= target:
-    answer += i
+    temp += i
     i += 1
-    divisors = 0
-    L = prime_factors(answer)
-    for j in range(len(L)):
+    divisors, factors = 0, prime_factors(temp)
+    for j in range(len(factors)):
         if j == 0:
             divisors += 1
             increase = 1
-        elif L[j] == L[j - 1]:
+        elif factors[j] == factors[j - 1]:
             divisors += increase
-        elif L[j] != L[j - 1]:
-            divisors, increase = 2 * divisors + 1, divisors + 1
+        elif factors[j] != factors[j - 1]:
+            divisors, increase = 2*divisors + 1, divisors + 1
     divisors += 1
+answer = temp
 print(answer)
