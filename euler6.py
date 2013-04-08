@@ -1,9 +1,8 @@
 target = 100
-
-squareofsum = sum(range(1, target + 1))**2
-L = []
+square_of_sum = sum(range(1, target + 1))**2
+squares = []
 for i in range(1, target + 1):
-    L.append(i**2)
-sumofsquares = sum(L)
-answer = squareofsum - sumofsquares
+    squares.append(i**2)
+sum_of_squares = sum(squares)
+answer = square_of_sum - sum_of_squares
 print(answer)

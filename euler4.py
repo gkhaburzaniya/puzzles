@@ -1,6 +1,5 @@
 target = 999
-
-answer = lowest = 0
+temp = 0
 for i in range(target, 0, -1):
     for j in range(target, 0, -1):
         k = i * j
@@ -9,10 +8,11 @@ for i in range(target, 0, -1):
             if kstr[m] != kstr[-(m + 1)]:
                 break
         else:
-            if k > answer:
-                answer = k
+            if k > temp:
+                temp = k
                 lowest = min(i, j)
             break
     if i < lowest:
         break
+answer = temp
 print(answer)

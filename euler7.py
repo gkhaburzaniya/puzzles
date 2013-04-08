@@ -1,9 +1,10 @@
-target = 10001
-
 from primes import is_prime
-i, answer = 0, 1
+
+target = 10001
+i, temp = 0, 1
 while(i < target):
-    answer += 1
-    if is_prime(answer):
+    temp += 1
+    if is_prime(temp):
         i += 1
+answer = temp
 print(answer)
