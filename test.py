@@ -4,7 +4,7 @@ from matrix import matrix
 
 
 def verify_problem(num, expected_answer):
-    module = __import__("Euler{0}".format(num))
+    module = __import__("euler{0}".format(num))
     assert module.answer == expected_answer, "{0} != {1}".format(
         module.answer, expected_answer)
 

@@ -1,4 +1,4 @@
-def matrix(height, width, value = None):
+def matrix(height, width, value=None):
     """Return a list of lists representing a matrix."""
     function = value
     if not callable(value):
