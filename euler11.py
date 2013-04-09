@@ -44,4 +44,3 @@ for i in range(20):
         if temp < max(temp1, temp2, temp3, temp4):
             temp = max(temp1, temp2, temp3, temp4)
 answer = temp
-print(answer)

@@ -13,4 +13,3 @@ for i in range(2, target):
         maxlength = length
         temp = i
 answer = temp
-print(answer)

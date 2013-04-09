@@ -15,4 +15,3 @@ for i in range(target, 0, -1):
     if i < lowest:
         break
 answer = temp
-print(answer)

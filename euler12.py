@@ -16,4 +16,3 @@ while divisors <= target:
             divisors, increase = 2*divisors + 1, divisors + 1
     divisors += 1
 answer = temp
-print(answer)

@@ -70,4 +70,3 @@ for i in range (1, target + 1):
             elif j[1] == 9:
                 temp += len('ninety')
 answer = temp
-print(answer)

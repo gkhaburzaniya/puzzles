@@ -7,4 +7,3 @@ while(i < target):
     if is_prime(temp):
         i += 1
 answer = temp
-print(answer)

@@ -5,4 +5,3 @@ while n2 < target:
     if n1%2 == 0:
         temp += n1
 answer = temp
-print(answer)

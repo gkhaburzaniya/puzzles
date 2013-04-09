@@ -9,4 +9,3 @@ for a in range (1, target):
     if temp != 0:
         break
 answer = temp
-print(answer)

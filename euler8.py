@@ -21,4 +21,3 @@ for i in range(len(target) - 4):
     if temp1 > temp:
         temp = temp1
 answer = temp
-print(answer)
