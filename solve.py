@@ -1,7 +1,7 @@
 from timeit import timeit
 
 i = input('\nSolve which problem?\n')
-while i is not 'q':
+while i[0] != 'q' and i[0] != 'Q' and i[0] != 'e' and i[0] != 'E':
     print(timeit(
         'from euler' + i +
         ' import answer; print("\\nAnswer\\n" + str(answer) + "\\n\\nTime")',
