@@ -1,3 +1,4 @@
+"""Solve problem 17 of Project Euler and store the answer in answer."""
 target = 1000
 temp = 0
 for i in range (1, target + 1):

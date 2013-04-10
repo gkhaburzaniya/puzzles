@@ -1,3 +1,4 @@
+"""Solve problem 7 of Project Euler and store the answer in answer."""
 from primes import is_prime
 
 target = 10001

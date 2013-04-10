@@ -1,3 +1,4 @@
+"""Solve problem 4 of Project Euler and store the answer in answer."""
 target = 999
 temp = 0
 for i in range(target, 0, -1):

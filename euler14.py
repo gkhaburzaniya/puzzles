@@ -1,3 +1,4 @@
+"""Solve problem 14 of Project Euler and store the answer in answer."""
 target = 1000000
 maxlength, D = 1, {1:1}
 for i in range(2, target):

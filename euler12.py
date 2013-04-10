@@ -1,3 +1,4 @@
+"""Solve problem 12 of Project Euler and store the answer in answer."""
 from primes import prime_factors
 
 target = 500

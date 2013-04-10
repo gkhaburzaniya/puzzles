@@ -1,3 +1,4 @@
+"""Solve problem 15 of Project Euler and store the answer in answer."""
 from matrix import matrix
 
 target = 20
