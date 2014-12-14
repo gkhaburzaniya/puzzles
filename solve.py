@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-from timeit import timeit
+import time, importlib
 
 i = input('\nSolve which problem?\n')
-while i[0] != 'q' and i[0] != 'Q' and i[0] != 'e' and i[0] != 'E':
-    print(timeit(
-        'from euler' + i +
-        ' import answer; print("\\nAnswer\\n" + str(answer) + "\\n\\nTime")',
-        number=1))
-    i = input('\nSolve which problem?\n')
+while i[0] != 'q':
+  start_time = time.time()
+  module = importlib.import_module('euler'+i)
+  finish = time.time() - start_time
+  print('Answer: ', module.answer, '\nTook: ', finish, ' seconds')
+  i = input('\nSolve which problem?\n')
