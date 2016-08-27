@@ -14,22 +14,24 @@ target = """75
 63 66 04 68 89 53 67 30 73 16 69 87 40 31
 04 62 98 27 23 09 70 98 73 93 38 53 60 04 23"""
 
-target_lines = target.splitlines()
-for index, line in enumerate(target_lines):
-    target_lines[index] = [int(item) for item in line.split(' ')]
+def solve_it(target):
+    target_lines = target.splitlines()
+    for index, line in enumerate(target_lines):
+        target_lines[index] = [int(item) for item in line.split(' ')]
 
-new_triangle = []
-for row, thing in enumerate(target_lines):
-    new_triangle.append([])
-    for position, value in enumerate(thing):
-        if row == 0:
-            new_triangle[row].append(value)
-        elif position == 0:
-            new_triangle[row].append(value + new_triangle[row-1][position])
-        elif position == len(thing) - 1:
-            new_triangle[row].append(value + new_triangle[row-1][position-1])
-        else:
-            new_triangle[row].append(value + max(new_triangle[row-1][position-1],
-                                                 new_triangle[row-1][position]))
+    new_triangle = []
+    for row, thing in enumerate(target_lines):
+        new_triangle.append([])
+        for position, value in enumerate(thing):
+            if row == 0:
+                new_triangle[row].append(value)
+            elif position == 0:
+                new_triangle[row].append(value + new_triangle[row-1][position])
+            elif position == len(thing) - 1:
+                new_triangle[row].append(value + new_triangle[row-1][position-1])
+            else:
+                new_triangle[row].append(value + max(new_triangle[row-1][position-1],
+                                                     new_triangle[row-1][position]))
+    return max(new_triangle[-1])
 
-answer = max(new_triangle[-1])
+answer = solve_it(target)
