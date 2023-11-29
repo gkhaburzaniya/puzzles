@@ -12,3 +12,10 @@ for line in puzzle_input.split("\n"):
 elf_totals = [sum(elf) for elf in elves]
 
 print(max(elf_totals))
+
+top_three = []
+for i in range(3):
+    top_three.append(max(elf_totals))
+    elf_totals.remove(max(elf_totals))
+
+print(sum(top_three))
