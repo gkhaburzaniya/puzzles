@@ -1,9 +1,9 @@
-puzzle_input = open("puzzle_input.txt").read()
+puzzle_input = open("puzzle_input.txt")
 elves = [[]]
 current_elf = 0
 
-for line in puzzle_input.split("\n"):
-    if line == "":
+for line in puzzle_input:
+    if line == "\n":
         current_elf += 1
         elves.append([])
     else:
