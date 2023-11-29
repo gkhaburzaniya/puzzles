@@ -1,4 +1,4 @@
-puzzle_input = open("puzzle_input.txt")
+puzzle_input = open("day_1_input.txt")
 elves = [[]]
 current_elf = 0
 
