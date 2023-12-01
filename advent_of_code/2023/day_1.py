@@ -2,49 +2,35 @@ import math
 
 puzzle_input = open("day_1_input.txt")
 
-digits = {"one": "1", "two": "2", "three": "3", "four": "4", "five": "5",
-          "six": "6", "seven": "7", "eight": "8", "nine": "9"}
+digits = ["one", "1", "two", "2", "three", "3", "four", "4", "five", "5",
+          "six", "6", "seven", "7", "eight", "8", "nine", "9"]
+
+translate = {"one": "1", "two": "2", "three": "3", "four": "4", "five": "5",
+             "six": "6", "seven": "7", "eight": "8", "nine": "9"}
 
 total = 0
 
 
-def first_spelled_digit(string):
-    digit_start = math.inf
-    spelled_digit = None
-    for digit in digits.keys():
-        current_digit_start = string.find(digit)
-        if 0 <= current_digit_start < digit_start:
-            digit_start = current_digit_start
-            spelled_digit = digits[digit]
-    return spelled_digit
-
-
-def last_spelled_digit(string):
-    digit_start = 0
-    spelled_digit = None
-    for digit in digits.keys():
-        current_digit_start = string.find(digit)
-        if current_digit_start >= digit_start:
-            digit_start = current_digit_start
-            spelled_digit = digits[digit]
-    return spelled_digit
-
-
 for line in puzzle_input:
-    num = ""
-    for i, char in enumerate(line):
-        if char.isdigit():
-            num += first_spelled_digit(line[:i]) or char
-            break
-    else:
-        num += first_spelled_digit(line)
+    first_digit = "0"
+    second_digit = "0"
+    first_digit_pos = math.inf
+    second_digit_pos = math.inf
+    for digit in digits:
+        current_pos = line.find(digit)
+        if current_pos != -1 and current_pos < first_digit_pos:
+            first_digit = digit
+            first_digit_pos = current_pos
 
-    for i, char in enumerate(line[::-1]):
-        if char.isdigit():
-            num += last_spelled_digit(line[-i:]) or char
-            break
-    else:
-        num += last_spelled_digit(line)
-    total += int(num)
+        current_pos = line[::-1].find(digit[::-1])
+        if current_pos != -1 and current_pos < second_digit_pos:
+            second_digit = digit
+            second_digit_pos = current_pos
+    if not first_digit.isdigit():
+        first_digit = translate[first_digit]
+    if not second_digit.isdigit():
+        second_digit = translate[second_digit]
+    total += int(first_digit + second_digit)
+
 
 print(total)
