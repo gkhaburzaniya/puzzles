@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 puzzle_input = open("day_7_input.txt")
 
-card_order = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
+card_order = ["A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J"]
 card_order.reverse()
 hands = []
 
@@ -34,6 +34,14 @@ for line in puzzle_input:
     for card in card_word:
         cards_in_hand[card] += 1
 
+    if card_word != "JJJJJ":
+        biggest = sorted(cards_in_hand, key=cards_in_hand.get, reverse=True)
+        if biggest[0] == "J":
+            cards_in_hand[biggest[1]] += cards_in_hand["J"]
+        else:
+            cards_in_hand[biggest[0]] += cards_in_hand["J"]
+        del cards_in_hand["J"]
+
     sets = list(cards_in_hand.values())
 
     if 5 in sets:
@@ -55,7 +63,6 @@ for line in puzzle_input:
 hands = sorted(hands)
 
 winnings = 0
-
 for i, hand in enumerate(hands):
     winnings += hand.bid * (i+1)
 
