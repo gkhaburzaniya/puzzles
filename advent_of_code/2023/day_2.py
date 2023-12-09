@@ -1,4 +1,4 @@
-puzzle_input = open("day_2_input.txt")
+puzzle_input = open("inputs/day_2_input.txt")
 
 red = 12
 green = 13

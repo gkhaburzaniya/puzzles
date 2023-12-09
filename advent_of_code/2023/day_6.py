@@ -1,4 +1,4 @@
-puzzle_input = open("day_6_input.txt").readlines()
+puzzle_input = open("inputs/day_6_input.txt").readlines()
 
 times = [int(time) for time in puzzle_input[0].split() if time.isdigit()]
 records = [int(record) for record in puzzle_input[1].split() if record.isdigit()]

@@ -1,6 +1,6 @@
 from math import sqrt, floor, ceil
 
-puzzle_input = open("day_6_input.txt").readlines()
+puzzle_input = open("inputs/day_6_input.txt").readlines()
 
 time = ""
 record = ""

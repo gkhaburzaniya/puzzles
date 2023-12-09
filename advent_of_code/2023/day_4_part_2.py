@@ -1,4 +1,4 @@
-puzzle_input = open("day_4_input.txt").readlines()
+puzzle_input = open("inputs/day_4_input.txt").readlines()
 
 instances = [1] * len(puzzle_input)
 for i, line in enumerate(puzzle_input):

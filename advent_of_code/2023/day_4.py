@@ -1,4 +1,4 @@
-puzzle_input = open("day_4_input.txt")
+puzzle_input = open("inputs/day_4_input.txt")
 
 total = 0
 
