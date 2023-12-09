@@ -10,7 +10,7 @@ for line in puzzle_input:
         value_sets.append(new_values)
     value_sets.reverse()
     for i, values in enumerate(value_sets[1:]):
-        values.append(values[-1]+value_sets[i][-1])
-    total += value_sets[-1][-1]
+        values.insert(0, (values[0]-value_sets[i][0]))
+    total += value_sets[-1][0]
 
 print(total)
