@@ -1,3 +1,6 @@
+from itertools import product
+import re
+
 from dataclasses import dataclass
 
 puzzle_input = open("inputs/day_12_input.txt")
@@ -15,7 +18,7 @@ class Record:
     end: int = 0
 
 
-def find_way(some_records, some_springs, springs_start=0):
+def find_way(some_records, some_springs):
     prev_record = None
     for record in some_records:
         if not prev_record:
@@ -27,15 +30,15 @@ def find_way(some_records, some_springs, springs_start=0):
             if len(springs_left) < i + record.length:
                 return False
             if (
-                    (spring == unknown or spring == damaged) and
+                    spring == damaged and
                     operational not in springs_left[i:i + record.length] and
                     (
                         len(springs_left) == i + record.length or
                         springs_left[i + record.length] != damaged
                     )
             ):
-                record.start = springs_start + start_i + i
-                record.end = springs_start + start_i + i + record.length - 1
+                record.start = start_i + i
+                record.end = start_i + i + record.length - 1
                 prev_record = record
                 break
             elif spring == damaged:
@@ -52,13 +55,22 @@ for line in puzzle_input:
     words = line.split()
     springs = words[0]
     records = [Record(int(record)) for record in words[1].split(',')]
-    ways += find_way(records, springs)
-    for i in range(len(records)):
-        new_springs_start = records[-(i + 1)].start + 1
-        new_springs = springs[new_springs_start:]
-        for j in range(len(new_springs)):
-            ways += find_way(records[-(i + 1):],
-                             new_springs[j:],
-                             new_springs_start)
+    final_damageds = sum([record.length for record in records])
+    damageds = len(re.findall(r"#", springs))
+    unknowns = len(re.findall(r"\?", springs))
+    unknown_damageds = final_damageds - damageds
+    unknown_operationals = unknowns - unknown_damageds
+    possibilities = product("#.", repeat=unknowns)
+    for possibility in possibilities:
+        possibility = list(possibility)
+        if len([item for item in possibility if item == damaged]) != unknown_damageds:
+            continue
+        new_springs = ""
+        for spring in springs:
+            if spring == unknown:
+                new_springs += possibility.pop(0)
+            else:
+                new_springs += spring
+        ways += find_way(records, new_springs)
 
 print(ways)
