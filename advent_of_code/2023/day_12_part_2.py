@@ -12,37 +12,19 @@ unknown = "?"
 
 
 def find_way(some_records, some_springs):
-    records_found = 0
-    springs_i = 0
-    last_record = False
-    for record in some_records:
-        record_found = False
-        while not record_found:
-            spring = some_springs[springs_i]
-            if (
-                    spring == damaged and not last_record and
-                    some_springs[springs_i:springs_i + record + 1] == damaged * record + operational
-            ):
-                record_found = True
-                records_found += 1
-                if records_found == len(some_records) - 1:
-                    last_record = True
-                springs_i = springs_i + record + 1
-                continue
-            elif (
-                    spring == damaged and last_record and
-                    some_springs[springs_i:springs_i + record] == damaged * record
-            ):
-                return True
-            elif spring == damaged:
-                return False
-            springs_i += 1
+    for i, record in enumerate(some_records):
+        new_start = some_springs.find("#")
+        new_end = some_springs[new_start:].find(".") + new_start
+        if new_end - new_start != record:
+            return False
+        some_springs = some_springs[new_end:]
+    return True
 
 
 ways = 0
 for line in puzzle_input:
     words = line.split()
-    words[0] = (words[0] + "?") * 0 + words[0]
+    words[0] = (words[0] + "?") * 0 + words[0] + "."
     words[1] = (words[1] + ",") * 0 + words[1]
     springs = words[0]
     records = [int(record) for record in words[1].split(',')]
