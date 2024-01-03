@@ -13,16 +13,7 @@ unknown = "?"
 
 def find_way(some_records, some_springs):
     on_damaged = False
-    damageds = []
-    for i in range(len(some_springs)):
-        if some_springs[i] == damaged:
-            if not on_damaged:
-                start = i
-                on_damaged = True
-        else:
-            if on_damaged:
-                damageds.append(i - start)
-            on_damaged = False
+    damageds = [len(match) - 1 for match in re.findall("#+.", some_springs)]
     return damageds == some_records
 
 
