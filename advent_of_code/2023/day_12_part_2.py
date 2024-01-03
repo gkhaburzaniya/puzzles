@@ -12,13 +12,18 @@ unknown = "?"
 
 
 def find_way(some_records, some_springs):
-    for i, record in enumerate(some_records):
-        new_start = some_springs.find("#")
-        new_end = some_springs[new_start:].find(".") + new_start
-        if new_end - new_start != record:
-            return False
-        some_springs = some_springs[new_end:]
-    return True
+    on_damaged = False
+    damageds = []
+    for i in range(len(some_springs)):
+        if some_springs[i] == damaged:
+            if not on_damaged:
+                start = i
+                on_damaged = True
+        else:
+            if on_damaged:
+                damageds.append(i - start)
+            on_damaged = False
+    return damageds == some_records
 
 
 ways = 0
