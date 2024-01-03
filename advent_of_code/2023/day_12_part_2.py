@@ -11,12 +11,6 @@ operational = "."
 unknown = "?"
 
 
-def find_way(some_records, some_springs):
-    on_damaged = False
-    damageds = [len(match) - 1 for match in re.findall("#+.", some_springs)]
-    return damageds == some_records
-
-
 ways = 0
 for line in puzzle_input:
     words = line.split()
@@ -42,6 +36,6 @@ for line in puzzle_input:
                 unknowns_passed += 1
             else:
                 new_springs += spring
-        ways += find_way(records, new_springs)
+        ways += [len(match) - 1 for match in re.findall("#+.", new_springs)] == records
 
 print(ways)
