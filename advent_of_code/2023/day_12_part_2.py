@@ -11,6 +11,21 @@ operational = "."
 unknown = "?"
 
 
+def find_ways(pattern, springs, unknown_damageds, start_i=0):
+    ways = 0
+    for i, spring in enumerate(springs[start_i:]):
+        if spring == unknown:
+            test_springs = (springs[:i + start_i] + damaged
+                            + springs[i + start_i + 1:])
+            if re.fullmatch(pattern, test_springs):
+                if unknown_damageds == 1:
+                    ways += 1
+                else:
+                    ways += find_ways(pattern, test_springs,
+                                      unknown_damageds - 1, i + start_i + 1)
+    return ways
+
+
 ways = 0
 for line in puzzle_input:
     words = line.split()
@@ -18,24 +33,13 @@ for line in puzzle_input:
     words[1] = (words[1] + ",") * 0 + words[1]
     springs = words[0]
     records = [int(record) for record in words[1].split(',')]
-    final_damageds = sum(records)
-    damageds = len(re.findall(r"#", springs))
-    unknowns = len(re.findall(r"\?", springs))
-    unknown_damageds = final_damageds - damageds
-    unknown_operationals = unknowns - unknown_damageds
-    possibilities = combinations(range(unknowns), unknown_damageds)
-    for possibility in possibilities:
-        new_springs = ""
-        unknowns_passed = 0
-        for spring in springs:
-            if spring == unknown and unknowns_passed in possibility:
-                new_springs += damaged
-                unknowns_passed += 1
-            elif spring == unknown:
-                new_springs += operational
-                unknowns_passed += 1
-            else:
-                new_springs += spring
-        ways += [len(match) - 1 for match in re.findall("#+.", new_springs)] == records
+    damageds = sum(records)
+    known_damageds = len(re.findall("#", springs))
+    unknown_damageds = damageds - known_damageds
+    re_pattern = r"(?:\.|\?)*"
+    for record in records:
+        re_pattern += r"(?:#|\?){" + str(record) + r"}(?:\.|\?)+"
+    ways += find_ways(re_pattern, springs, unknown_damageds)
+
 
 print(ways)
