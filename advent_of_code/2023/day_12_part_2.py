@@ -13,8 +13,16 @@ UNKNOWN = "?"
 
 def find_ways(pattern, springs, start_i=0, filled_records=0):
     ways = 0
+    if (
+            filled_records == len(records) or
+            UNKNOWN not in springs[start_i:] or
+            len(re.findall(DAMAGED, springs[:start_i])) != sum(records[:filled_records])
+    ):
+        return ways
     curr_record = records[filled_records]
     for i, spring in enumerate(springs[start_i:]):
+        if start_i + i + curr_record >= len(springs):
+            break
         if spring == UNKNOWN:
             if springs[start_i + i + curr_record] == DAMAGED:
                 continue
@@ -57,8 +65,8 @@ def find_ways(pattern, springs, start_i=0, filled_records=0):
 ways = 0
 for line in puzzle_input:
     words = line.split()
-    words[0] = (words[0] + "?") * 0 + words[0] + "."
-    words[1] = (words[1] + ",") * 0 + words[1]
+    words[0] = (words[0] + "?") * 2 + words[0] + "."
+    words[1] = (words[1] + ",") * 2 + words[1]
     springs = words[0]
     records = [int(record) for record in words[1].split(',')]
     damageds = sum(records)
@@ -68,6 +76,4 @@ for line in puzzle_input:
     for record in records:
         re_pattern += r"(?:#|\?){" + str(record) + r"}(?:\.|\?)+"
     ways += find_ways(re_pattern, springs)
-
-
-print(ways)
+    print(line, ways)
