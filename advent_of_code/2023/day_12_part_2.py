@@ -1,7 +1,7 @@
-from itertools import combinations
 import re
-
-from dataclasses import dataclass
+import time
+start = time.time()
+new_start = start
 
 puzzle_input = open("inputs/day_12_input.txt")
 
@@ -9,7 +9,7 @@ puzzle_input = open("inputs/day_12_input.txt")
 DAMAGED = "#"
 OPERATIONAL = "."
 UNKNOWN = "?"
-MULTIPLIER = 4
+MULTIPLIER = 1
 
 
 def find_ways(curr_springs, filled_records=0):
@@ -20,31 +20,25 @@ def find_ways(curr_springs, filled_records=0):
     pattern = patterns[filled_records]
     curr_sum = sums[filled_records]
     for i, spring in enumerate(curr_springs):
-        if not re.fullmatch(pattern, curr_springs[i:]):
+        if not pattern.fullmatch(curr_springs[i:]):
             break
         if DAMAGED in curr_springs[:i]:
             break
         if curr_springs[i + curr_record] == DAMAGED:
             continue
-        if spring == UNKNOWN:
+        if spring == UNKNOWN or spring == DAMAGED:
             test_springs = (
                     curr_springs[:i] + DAMAGED * curr_record +
                     OPERATIONAL + curr_springs[i + curr_record + 1:]
             )
-            if re.fullmatch(pattern, test_springs):
+            print(records[filled_records:])
+            print(test_springs)
+            if pattern.fullmatch(test_springs):
                 if len(re.findall(DAMAGED, test_springs)) == curr_sum:
                     curr_ways += 1
                 else:
                     curr_ways += find_ways(test_springs[i+curr_record+1:],
                                            filled_records + 1)
-        elif spring == DAMAGED:
-            test_springs = (
-                    curr_springs[:i] + DAMAGED * curr_record + OPERATIONAL
-                    + curr_springs[i + curr_record + 1:])
-            if len(re.findall(DAMAGED, test_springs)) == curr_sum:
-                curr_ways += 1
-            curr_ways += find_ways(test_springs[i+curr_record+1:],
-                                   filled_records + 1)
     return curr_ways
 
 
@@ -61,8 +55,14 @@ for line in puzzle_input:
         re_pattern = r"(?:\.|\?)*"
         for record in records[i:]:
             re_pattern += r"(?:#|\?){" + str(record) + r"}(?:\.|\?)+"
-        patterns.append(re_pattern)
+        patterns.append(re.compile(re_pattern))
         sums.append(sum(records[i:]))
 
-    ways += find_ways(springs)
-    print(line, ways)
+    new_ways = find_ways(springs)
+    print(line, new_ways)
+    ways += new_ways
+
+print(ways)
+print(time.time() - start)
+
+
