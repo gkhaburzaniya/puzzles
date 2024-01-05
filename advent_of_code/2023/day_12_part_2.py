@@ -9,7 +9,8 @@ puzzle_input = open("inputs/day_12_input.txt")
 DAMAGED = "#"
 OPERATIONAL = "."
 UNKNOWN = "?"
-MULTIPLIER = 1
+MULTIPLIER = 4
+cached_patterns = {}
 
 
 def find_ways(curr_springs, filled_records=0):
@@ -19,6 +20,7 @@ def find_ways(curr_springs, filled_records=0):
     curr_record = records[filled_records]
     pattern = patterns[filled_records]
     curr_sum = sums[filled_records]
+    records_left = tuple(records[filled_records:])
     for i, spring in enumerate(curr_springs):
         if not pattern.fullmatch(curr_springs[i:]):
             break
@@ -31,14 +33,16 @@ def find_ways(curr_springs, filled_records=0):
                     curr_springs[:i] + DAMAGED * curr_record +
                     OPERATIONAL + curr_springs[i + curr_record + 1:]
             )
-            print(records[filled_records:])
-            print(test_springs)
-            if pattern.fullmatch(test_springs):
+            if (test_springs, records_left) in cached_patterns:
+                curr_ways += cached_patterns[(test_springs, records_left)]
+            elif pattern.fullmatch(test_springs):
                 if len(re.findall(DAMAGED, test_springs)) == curr_sum:
-                    curr_ways += 1
+                    new_ways = 1
                 else:
-                    curr_ways += find_ways(test_springs[i+curr_record+1:],
-                                           filled_records + 1)
+                    new_ways = find_ways(test_springs[i+curr_record+1:],
+                                         filled_records + 1)
+                cached_patterns[(test_springs, records_left)] = new_ways
+                curr_ways += new_ways
     return curr_ways
 
 
@@ -58,11 +62,9 @@ for line in puzzle_input:
         patterns.append(re.compile(re_pattern))
         sums.append(sum(records[i:]))
 
-    new_ways = find_ways(springs)
-    print(line, new_ways)
-    ways += new_ways
+    line_ways = find_ways(springs)
+    print(line, line_ways)
+    ways += line_ways
 
 print(ways)
 print(time.time() - start)
-
-
