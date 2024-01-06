@@ -56,9 +56,9 @@ for line in puzzle_input:
     patterns = []
     sums = []
     for i in range(len(records)):
-        re_pattern = r"(?:\.|\?)*"
+        re_pattern = r"[?.]*"
         for record in records[i:]:
-            re_pattern += r"(?:#|\?){" + str(record) + r"}(?:\.|\?)+"
+            re_pattern += r"[?#]{" + str(record) + r"}[?.]+"
         patterns.append(re.compile(re_pattern))
         sums.append(sum(records[i:]))
 
