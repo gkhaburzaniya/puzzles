@@ -1,5 +1,6 @@
 import re
 import time
+
 start = time.time()
 new_start = start
 
@@ -9,41 +10,55 @@ puzzle_input = open("inputs/day_12_input.txt")
 DAMAGED = "#"
 OPERATIONAL = "."
 UNKNOWN = "?"
-MULTIPLIER = 2
+MULTIPLIER = 0
 cached_patterns = {}
 
 
-def find_ways(curr_springs, filled_records=0):
+def find_ways(curr_spans, filled_records=0):
     curr_ways = 0
-    if filled_records == len(records):
-        return curr_ways
     curr_record = records[filled_records]
-    pattern = patterns[filled_records]
-    curr_sum = sums[filled_records]
-    records_left = tuple(records[filled_records:])
-    for i, spring in enumerate(curr_springs):
-        if not pattern.fullmatch(curr_springs[i:]):
-            break
-        if DAMAGED in curr_springs[:i]:
-            break
-        if curr_springs[i + curr_record] == DAMAGED:
-            continue
-        if spring == UNKNOWN or spring == DAMAGED:
-            test_springs = (
-                    DAMAGED * curr_record +
-                    OPERATIONAL + curr_springs[i + curr_record + 1:]
-            )
-            if (test_springs, records_left) in cached_patterns:
-                curr_ways += cached_patterns[(test_springs, records_left)]
-            elif pattern.fullmatch(test_springs):
-                if len(re.findall(DAMAGED, test_springs)) == curr_sum:
-                    new_ways = 1
-                else:
-                    new_ways = find_ways(test_springs[curr_record+1:],
-                                         filled_records + 1)
-                cached_patterns[(test_springs, records_left)] = new_ways
-                curr_ways += new_ways
+    if filled_records == len(records) - 1:
+        for span in curr_spans:
+            damaged_spans = list(re.finditer("#+", span))
+            if damaged_spans:
+                damaged_spans_start = damaged_spans[0].start()
+                damaged_spans_end = damaged_spans[-1].end()
+                damage_len = damaged_spans_end - damaged_spans_start
+                excess_len = curr_record - damage_len
+                curr_ways = 1 + 2 * (len(span) - damage_len - excess_len)
+                break
+            if len(span) >= curr_record:
+                curr_ways += len(span) - curr_record + 1
+    else:
+        curr_springs = ".".join(curr_spans) + "."
+        pattern = patterns[filled_records]
+        for i, span in enumerate(curr_spans):
+            if not pattern.fullmatch(curr_springs[i:]):
+                break
+            if DAMAGED in curr_springs[:i]:
+                break
+            if curr_springs[i + curr_record] == DAMAGED:
+                continue
+            if len(span-i) >= curr_record:
+                for j, char in enumerate(span):
+                    if len(span) > curr_record + records[filled_records + 1]:
+                        new_span = span[j + curr_record + 1:]
+                        try:
+                            new_spans = [new_span] + curr_spans[i + 1:]
+                        except IndexError:
+                            new_spans = [new_span]
+                    else:
+                        new_spans = curr_spans[i + 1:]
+                    curr_ways += find_ways(new_spans, filled_records + 1)
     return curr_ways
+
+
+# def fit_in_damage(curr_spans, filled_records=0):
+#     curr_record = records[filled_records]
+#     if filled_records == len(records) - 1:
+#         for span in curr_spans:
+#             damaged_in_span = re.search(DAMAGED, span)
+#             if damaged_in_span:
 
 
 ways = 0
@@ -54,16 +69,15 @@ for line in puzzle_input:
     springs = words[0]
     records = [int(record) for record in words[1].split(',')]
     patterns = []
-    sums = []
     for i in range(len(records)):
         re_pattern = r"[?.]*"
         for record in records[i:]:
             re_pattern += r"[?#]{" + str(record) + r"}[?.]+"
         patterns.append(re.compile(re_pattern))
-        sums.append(sum(records[i:]))
-
-    line_ways = find_ways(springs)
+    spans = re.findall(r"[?#]+", springs)
+    line_ways = find_ways(spans)
     print(line, line_ways)
+    print(spans)
     ways += line_ways
 
 print(ways)
