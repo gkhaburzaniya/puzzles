@@ -1,7 +1,7 @@
 import re
 import time
+from functools import cache
 start = time.time()
-new_start = start
 
 puzzle_input = open("inputs/day_12_input.txt")
 
@@ -9,10 +9,10 @@ puzzle_input = open("inputs/day_12_input.txt")
 DAMAGED = "#"
 OPERATIONAL = "."
 UNKNOWN = "?"
-MULTIPLIER = 2
-cached_patterns = {}
+MULTIPLIER = 1
 
 
+@cache
 def find_ways(curr_springs, filled_records=0):
     curr_ways = 0
     if filled_records == len(records):
@@ -33,15 +33,12 @@ def find_ways(curr_springs, filled_records=0):
                     DAMAGED * curr_record +
                     OPERATIONAL + curr_springs[i + curr_record + 1:]
             )
-            if (test_springs, records_left) in cached_patterns:
-                curr_ways += cached_patterns[(test_springs, records_left)]
-            elif pattern.fullmatch(test_springs):
+            if pattern.fullmatch(test_springs):
                 if len(re.findall(DAMAGED, test_springs)) == curr_sum:
                     new_ways = 1
                 else:
                     new_ways = find_ways(test_springs[curr_record+1:],
                                          filled_records + 1)
-                cached_patterns[(test_springs, records_left)] = new_ways
                 curr_ways += new_ways
     return curr_ways
 
@@ -63,7 +60,6 @@ for line in puzzle_input:
         sums.append(sum(records[i:]))
 
     line_ways = find_ways(springs)
-    print(line, line_ways)
     ways += line_ways
 
 print(ways)
