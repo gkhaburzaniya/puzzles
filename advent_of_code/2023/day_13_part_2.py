@@ -1,7 +1,12 @@
-from Levenshtein import distance
-
-
 puzzle_input = open("inputs/day_13_input.txt")
+
+
+def distance(first_string, second_string):
+    differences = 0
+    for i, char in enumerate(first_string):
+        if char != second_string[i]:
+            differences += 1
+    return differences
 
 
 def solve(field):
