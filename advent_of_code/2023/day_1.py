@@ -1,6 +1,6 @@
 import math
 
-puzzle_input = open("inputs/day_1_input.txt")
+puzzle_input = open("inputs/day_1.txt")
 
 DIGITS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 

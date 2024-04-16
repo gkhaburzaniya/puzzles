@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from math import lcm
 
-puzzle_input = open("inputs/day_8_input.txt")
+puzzle_input = open("inputs/day_8.txt")
 
 instructions = None
 nodes = {}

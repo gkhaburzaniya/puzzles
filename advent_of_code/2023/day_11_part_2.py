@@ -1,4 +1,4 @@
-puzzle_input = open("inputs/day_11_input.txt")
+puzzle_input = open("inputs/day_11.txt")
 expansion_rate = 1000000
 
 rows = [line.strip() for line in puzzle_input]

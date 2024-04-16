@@ -3,7 +3,7 @@ import re
 
 from dataclasses import dataclass
 
-puzzle_input = open("inputs/day_12_input.txt")
+puzzle_input = open("inputs/day_12.txt")
 
 
 damaged = "#"

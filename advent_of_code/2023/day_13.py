@@ -1,4 +1,4 @@
-puzzle_input = open("inputs/day_13_input.txt")
+puzzle_input = open("inputs/day_13.txt")
 
 
 def distance(first_string, second_string):

@@ -1,4 +1,4 @@
-puzzle_input = open("inputs/day_3_input.txt")
+puzzle_input = open("inputs/day_3.txt")
 
 
 class Num:

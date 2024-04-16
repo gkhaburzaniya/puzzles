@@ -3,7 +3,7 @@ import time
 from functools import cache
 start = time.time()
 
-puzzle_input = open("inputs/day_12_input.txt")
+puzzle_input = open("inputs/day_12.txt")
 
 
 DAMAGED = "#"

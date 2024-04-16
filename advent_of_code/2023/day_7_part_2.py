@@ -1,7 +1,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
 
-puzzle_input = open("inputs/day_7_input.txt")
+puzzle_input = open("inputs/day_7.txt")
 
 card_order = ["A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J"]
 card_order.reverse()

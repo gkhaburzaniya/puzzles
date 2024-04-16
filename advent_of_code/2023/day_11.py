@@ -1,4 +1,4 @@
-puzzle_input = open("inputs/day_11_input.txt")
+puzzle_input = open("inputs/day_11.txt")
 
 rows = [line.strip() for line in puzzle_input]
 columns = [""] * len(rows[0])
