@@ -31,5 +31,4 @@ for i, game in enumerate(puzzle_input):
         total += game_id
     total_2 += min_red * min_green * min_blue
 
-print(total)
-print(total_2)
+print(total, total_2)
