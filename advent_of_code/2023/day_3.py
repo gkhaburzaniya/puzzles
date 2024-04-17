@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+
+
 puzzle_input = open("inputs/day_3.txt")
 
 
@@ -68,34 +71,45 @@ def process_line(first_line_nums, middle_line_nums, middle_line,
     return line_total
 
 
-prev_line = ""
-prev_line_nums = []
-curr_line = ""
-curr_line_nums = []
-next_line = ""
-next_line_nums = []
-total = 0
+@dataclass
+class LinesAndNums:
+    lines = ["", "", ""]
+    nums = [[], [], []]
+
+
+answer = 0
+answer_2 = 0
+
+
+def solve(new_line, lines, nums):
+    lines[0] = lines[1]
+    nums[0] = nums[1]
+    lines[1] = lines[2]
+    nums[1] = nums[2]
+    lines[2] = new_line.strip()
+    nums[2] = find_nums(lines[2])
+    total_2 = 0
+
+    char_positions = [i for i, char in enumerate(lines[1])
+                      if char == "*"]
+    for position in char_positions:
+        adjacent_nums = []
+        for num in nums[0] + nums[1] + nums[2]:
+            if num.adjacent([position]):
+                adjacent_nums.append(num)
+        if len(adjacent_nums) == 2:
+            total_2 += adjacent_nums[0].num * adjacent_nums[1].num
+    total = process_line(nums[0], nums[1], lines[1], nums[2])
+    return total, total_2
 
 
 for line in puzzle_input:
-    prev_line = curr_line
-    prev_line_nums = curr_line_nums
-    curr_line = next_line
-    curr_line_nums = next_line_nums
-    next_line = line.strip()
-    next_line_nums = find_nums(next_line)
+    totals = solve(line, LinesAndNums.lines, LinesAndNums.nums)
+    answer += totals[0]
+    answer_2 += totals[1]
 
-    total += process_line(prev_line_nums, curr_line_nums, curr_line,
-                          next_line_nums)
+totals = solve("", LinesAndNums.lines, LinesAndNums.nums)
+answer += totals[0]
+answer_2 += totals[1]
 
-prev_line = curr_line
-prev_line_nums = curr_line_nums
-curr_line = next_line
-curr_line_nums = next_line_nums
-next_line = ""
-next_line_nums = find_nums(next_line)
-
-total += process_line(prev_line_nums, curr_line_nums, curr_line,
-                      next_line_nums)
-
-print(total)
+print(answer, answer_2)
