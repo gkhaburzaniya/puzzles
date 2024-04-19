@@ -1,3 +1,7 @@
+import itertools
+
+from dataclasses import dataclass
+
 puzzle_input = open("inputs/day_5.txt")
 
 heading = "seeds"
@@ -9,6 +13,29 @@ lights = []
 temperatures = []
 humidities = []
 locations = []
+
+seeds_2 = []
+soils_2 = []
+fertilizers_2 = []
+waters_2 = []
+lights_2 = []
+temperatures_2 = []
+humidities_2 = []
+locations_2 = []
+
+
+all_transforms = [locations_2, humidities_2, temperatures_2, lights_2,
+                  waters_2, fertilizers_2, soils_2]
+
+
+@dataclass
+class Transform:
+    destination_start: int
+    sourse_start: int
+    length: 0
+
+    def __lt__(self, other):
+        return self.destination_start < other.destination_start
 
 
 def transform(words, destination, sourse):
@@ -49,25 +76,72 @@ for line in puzzle_input:
     elif "humidity-to-location" in line:
         heading = "humidity-to-location"
         continue
+    elif line == "\n":
+        continue
 
+    words = line.split()
     if heading == "seeds":
-        for word in line.split():
+        for word in words:
             if word.isdigit():
                 seeds.append(int(word))
+        for i, word in enumerate(words[1:]):
+            if i % 2 == 0:
+                start = int(word)
+            else:
+                seeds_2.append((start, start + int(word)))
     elif heading == "seed-to-soil":
         transform(line.split(), soils, seeds)
+        soils_2.append(Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "soil-to-fertilizer":
         transform(line.split(), fertilizers, soils)
+        fertilizers_2.append(
+            Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "fertilizer-to-water":
         transform(line.split(), waters, fertilizers)
+        waters_2.append(Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "water-to-light":
         transform(line.split(), lights, waters)
+        lights_2.append(Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "light-to-temperature":
         transform(line.split(), temperatures, lights)
+        temperatures_2.append(
+            Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "temperature-to-humidity":
         transform(line.split(), humidities, temperatures)
+        humidities_2.append(
+            Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "humidity-to-location":
         transform(line.split(), locations, humidities)
         locations.extend(humidities)
 
-print(min(locations))
+        locations_2.append(
+            Transform(int(words[0]), int(words[1]), int(words[2])))
+
+
+answer = min(locations)
+
+for i, transform_type in enumerate(all_transforms):
+    all_transforms[i] = sorted(transform_type)
+
+
+def check_num(num):
+    i = num
+    for transform_type in all_transforms:
+        for transform in transform_type:
+            if i < transform.destination_start:
+                break
+            if transform.destination_start <= i < transform.destination_start + transform.length:
+                i = i - transform.destination_start + transform.sourse_start
+                break
+    for seed in seeds_2:
+        if seed[0] <= i < seed[1]:
+            return num
+
+
+for j in itertools.count():
+    if check_num(j):
+        answer_2 = j
+        break
+
+
+print(answer, answer_2)
