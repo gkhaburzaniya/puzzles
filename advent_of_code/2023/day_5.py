@@ -143,5 +143,32 @@ for j in itertools.count():
         answer_2 = j
         break
 
+# ranges = []
+# num = 0
+# for transform in locations_2:
+#     ranges.append((num, transform.destination_start))
+#     ranges.append((transform.destination_start,
+#                    transform.destination_start + transform.length))
+#     num = transform.destination_start + transform.length
+#
+# new_ranges = ranges.copy()
+# for length in ranges:
+#     for transform_type in all_transforms:
+#         new_new_ranges = []
+#         for transform in transform_type:
+#             for new_length in new_ranges:
+#                 if new_length[1] < transform.destination_start:
+#                     break
+#                 if transform.destination_start <= new_length[1] < transform.destination_start + transform.length:
+#                     new_new_ranges.append((new_length[0], transform.destination_start))
+#                     new_new_ranges.append((transform.destination_start, new_length[1]))
+#                 elif transform.destination_start + transform.length <= new_length[1]:
+#                     new_new_ranges.append((new_length[0], transform.destination_start))
+#                     new_new_ranges.append((transform.destination_start, transform.destination_start + transform.length))
+#                     new_new_ranges.append((transform.destination_start + transform.length, new_length[1]))
+#         else:
+#             new_ranges = new_new_ranges
+#             new_ranges.sort()
+
 
 print(answer, answer_2)
