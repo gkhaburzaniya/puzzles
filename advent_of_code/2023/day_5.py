@@ -91,31 +91,51 @@ for line in puzzle_input:
                 seeds_2.append((start, start + int(word)))
     elif heading == "seed-to-soil":
         transform(line.split(), soils, seeds)
+
         soils_2.append(Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "soil-to-fertilizer":
+        soils.extend(seeds)
+        seeds = []
         transform(line.split(), fertilizers, soils)
+
         fertilizers_2.append(
             Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "fertilizer-to-water":
+        fertilizers.extend(soils)
+        soils = []
         transform(line.split(), waters, fertilizers)
+
         waters_2.append(Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "water-to-light":
+        waters.extend(fertilizers)
+        fertilizers = []
         transform(line.split(), lights, waters)
+
         lights_2.append(Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "light-to-temperature":
+        lights.extend(waters)
+        waters = []
         transform(line.split(), temperatures, lights)
+
         temperatures_2.append(
             Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "temperature-to-humidity":
+        temperatures.extend(lights)
+        lights = []
         transform(line.split(), humidities, temperatures)
+
         humidities_2.append(
             Transform(int(words[0]), int(words[1]), int(words[2])))
     elif heading == "humidity-to-location":
+        humidities.extend(temperatures)
+        temperatures = []
         transform(line.split(), locations, humidities)
-        locations.extend(humidities)
 
         locations_2.append(
             Transform(int(words[0]), int(words[1]), int(words[2])))
+
+locations.extend(humidities)
+
 
 
 answer = min(locations)
