@@ -89,56 +89,59 @@ for line in puzzle_input:
                 start = int(word)
             else:
                 seeds_2.append((start, start + int(word)))
-    elif heading == "seed-to-soil":
+        continue
+
+    destination_start, sourse_start, length = (
+        int(words[0]), int(words[1]), int(words[2]))
+
+    if heading == "seed-to-soil":
         transform(line.split(), soils, seeds)
 
-        soils_2.append(Transform(int(words[0]), int(words[1]), int(words[2])))
+        soils_2.append(Transform(destination_start, sourse_start, length))
     elif heading == "soil-to-fertilizer":
         soils.extend(seeds)
         seeds = []
         transform(line.split(), fertilizers, soils)
 
         fertilizers_2.append(
-            Transform(int(words[0]), int(words[1]), int(words[2])))
+            Transform(destination_start, sourse_start, length))
     elif heading == "fertilizer-to-water":
         fertilizers.extend(soils)
         soils = []
         transform(line.split(), waters, fertilizers)
 
-        waters_2.append(Transform(int(words[0]), int(words[1]), int(words[2])))
+        waters_2.append(Transform(destination_start, sourse_start, length))
     elif heading == "water-to-light":
         waters.extend(fertilizers)
         fertilizers = []
         transform(line.split(), lights, waters)
 
-        lights_2.append(Transform(int(words[0]), int(words[1]), int(words[2])))
+        lights_2.append(Transform(destination_start, sourse_start, length))
     elif heading == "light-to-temperature":
         lights.extend(waters)
         waters = []
         transform(line.split(), temperatures, lights)
 
         temperatures_2.append(
-            Transform(int(words[0]), int(words[1]), int(words[2])))
+            Transform(destination_start, sourse_start, length))
     elif heading == "temperature-to-humidity":
         temperatures.extend(lights)
         lights = []
         transform(line.split(), humidities, temperatures)
 
-        humidities_2.append(
-            Transform(int(words[0]), int(words[1]), int(words[2])))
+        humidities_2.append(Transform(destination_start, sourse_start, length))
     elif heading == "humidity-to-location":
         humidities.extend(temperatures)
         temperatures = []
         transform(line.split(), locations, humidities)
 
-        locations_2.append(
-            Transform(int(words[0]), int(words[1]), int(words[2])))
+        locations_2.append(Transform(destination_start, sourse_start, length))
 
 locations.extend(humidities)
 
 
-
 answer = min(locations)
+answer_2 = None
 
 for i, transform_type in enumerate(all_transforms):
     all_transforms[i] = sorted(transform_type)
@@ -218,4 +221,4 @@ for i, transform_type in enumerate(all_transforms):
 #         answer_2 = length
 #         break
 
-print(answer)
+print(answer, answer_2)
