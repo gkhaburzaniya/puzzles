@@ -38,17 +38,15 @@ class Transform:
         return self.destination_start < other.destination_start
 
 
-def transform(words, destination, sourse):
+def transform(tform, destination, sourse):
     if not words:
         destination.extend(sourse)
         return
-    destination_start = int(words[0])
-    sourse_start = int(words[1])
-    length = int(words[2])
     items_to_del = []
     for i, item in enumerate(sourse):
-        if sourse_start <= item < sourse_start + length:
-            destination.append(item - sourse_start + destination_start)
+        if tform.sourse_start <= item < tform.sourse_start + tform.length:
+            destination.append(
+                item - tform.sourse_start + tform.destination_start)
             items_to_del.append(i)
     for i in reversed(items_to_del):
         del sourse[i]
@@ -93,49 +91,48 @@ for line in puzzle_input:
 
     destination_start, sourse_start, length = (
         int(words[0]), int(words[1]), int(words[2]))
+    tform = Transform(destination_start, sourse_start, length)
 
     if heading == "seed-to-soil":
-        transform(line.split(), soils, seeds)
+        transform(tform, soils, seeds)
 
-        soils_2.append(Transform(destination_start, sourse_start, length))
+        soils_2.append(tform)
     elif heading == "soil-to-fertilizer":
         soils.extend(seeds)
         seeds = []
-        transform(line.split(), fertilizers, soils)
+        transform(tform, fertilizers, soils)
 
-        fertilizers_2.append(
-            Transform(destination_start, sourse_start, length))
+        fertilizers_2.append(tform)
     elif heading == "fertilizer-to-water":
         fertilizers.extend(soils)
         soils = []
-        transform(line.split(), waters, fertilizers)
+        transform(tform, waters, fertilizers)
 
-        waters_2.append(Transform(destination_start, sourse_start, length))
+        waters_2.append(tform)
     elif heading == "water-to-light":
         waters.extend(fertilizers)
         fertilizers = []
-        transform(line.split(), lights, waters)
+        transform(tform, lights, waters)
 
-        lights_2.append(Transform(destination_start, sourse_start, length))
+        lights_2.append(tform)
     elif heading == "light-to-temperature":
         lights.extend(waters)
         waters = []
-        transform(line.split(), temperatures, lights)
+        transform(tform, temperatures, lights)
 
-        temperatures_2.append(
-            Transform(destination_start, sourse_start, length))
+        temperatures_2.append(tform)
     elif heading == "temperature-to-humidity":
         temperatures.extend(lights)
         lights = []
-        transform(line.split(), humidities, temperatures)
+        transform(tform, humidities, temperatures)
 
-        humidities_2.append(Transform(destination_start, sourse_start, length))
+        humidities_2.append(tform)
     elif heading == "humidity-to-location":
         humidities.extend(temperatures)
         temperatures = []
-        transform(line.split(), locations, humidities)
+        transform(tform, locations, humidities)
 
-        locations_2.append(Transform(destination_start, sourse_start, length))
+        locations_2.append(tform)
 
 locations.extend(humidities)
 
