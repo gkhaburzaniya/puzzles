@@ -163,59 +163,57 @@ for i, transform_type in enumerate(all_transforms):
 #         answer_2 = j
 #         break
 
-# ranges = []
-# num = 0
-# for transform in locations_2:
-#     ranges.append((num, transform.destination_start, num))
-#     ranges.append((transform.destination_start,
-#                    transform.destination_start + transform.length,
-#                    transform.destination_start))
-#     num = transform.destination_start + transform.length
-#
-#
-# def final_ranges(ranges):
-#     for transform_type in all_transforms:
-#         new_ranges = []
-#         for transform in transform_type:
-#             for length in ranges:
-#                 if length[1] < transform.destination_start or length[0] >= transform.destination_start + transform.length:
-#                     new_ranges.append(length)
-#                 elif transform.destination_start > length[0] and transform.destination_start + transform.length <= length[1]:
-#                     new_ranges.append((length[0], transform.destination_start, length[2]))
-#                     new_ranges.append((transform.sourse_start, transform.sourse_start + transform.length, length[2] + (transform.destination_start - length[0])))
-#                     new_ranges.append((transform.destination_start + transform.length, length[1], length[2] + (transform.destination_start - length[0]) + transform.length))
-#                 elif length[0] >= transform.destination_start and length[1] < transform.destination_start + transform.length:
-#                     new_ranges.append((transform.sourse_start + (length[0] - transform.destination_start), transform.sourse_start + (length[1] - transform.destination_start), length[2]))
-#                 elif transform.destination_start <= length[1] < transform.destination_start + transform.length:
-#                     new_ranges.append((length[0], transform.destination_start, length[2]))
-#                     new_ranges.append((transform.sourse_start, transform.sourse_start + transform.length, length[2] + (transform.destination_start - length[0])))
-#                 elif transform.destination_start >= length[0] and length[1] > transform.destination_start + transform.length:
-#                     new_ranges.append((transform.sourse_start + (length[0] - transform.destination_start), transform.sourse_start + transform.length, length[2]))
-#                     new_ranges.append((transform.destination_start + transform.length, length[1], length[2] + (transform.destination_start - length[0])))
-#
-#         else:
-#             ranges = new_ranges
-#             ranges.sort()
-#     return ranges
-#
-#
-# ranges = final_ranges(ranges)
-# ranges.sort(key=lambda length: length[2])
-#
-#
-# def check_lengths(length):
-#     for seed in seeds_2:
-#         if (
-#                 (seed[0] <= length[0] < seed[1])
-#                 or (seed[0] <= length[1] < seed[1])
-#                 or (length[0] < seed[0] and length[1] > seed[1])
-#         ):
-#             return length
-#
-#
-# for length in ranges:
-#     if check_lengths(length):
-#         answer_2 = length
-#         break
+ranges = []
+num = 0
+for transform in locations_2:
+    ranges.append((num, transform.destination_start, num))
+    ranges.append((transform.destination_start,
+                   transform.destination_start + transform.length,
+                   transform.destination_start))
+    num = transform.destination_start + transform.length
+
+
+def final_ranges(ranges):
+    for transform_type in all_transforms:
+        new_ranges = []
+        for transform in transform_type:
+            for length in ranges:
+                if length[1] < transform.destination_start or length[0] >= transform.destination_start + transform.length:
+                    new_ranges.append(length)
+                elif transform.destination_start > length[0] and transform.destination_start + transform.length <= length[1]:
+                    new_ranges.append((length[0], transform.destination_start, length[2]))
+                    new_ranges.append((transform.sourse_start, transform.sourse_start + transform.length, length[2] + (transform.destination_start - length[0])))
+                    new_ranges.append((transform.destination_start + transform.length, length[1], length[2] + (transform.destination_start - length[0]) + transform.length))
+                elif length[0] >= transform.destination_start and length[1] < transform.destination_start + transform.length:
+                    new_ranges.append((transform.sourse_start + (length[0] - transform.destination_start), transform.sourse_start + (length[1] - transform.destination_start), length[2]))
+                elif transform.destination_start <= length[1] < transform.destination_start + transform.length:
+                    new_ranges.append((length[0], transform.destination_start, length[2]))
+                    new_ranges.append((transform.sourse_start, transform.sourse_start + transform.length, length[2] + (transform.destination_start - length[0])))
+                elif transform.destination_start >= length[0] and length[1] > transform.destination_start + transform.length:
+                    new_ranges.append((transform.sourse_start + (length[0] - transform.destination_start), transform.sourse_start + transform.length, length[2]))
+                    new_ranges.append((transform.destination_start + transform.length, length[1], length[2] + (transform.destination_start - length[0])))
+
+        else:
+            ranges = new_ranges
+            ranges.sort()
+    return ranges
+
+
+ranges = final_ranges(ranges)
+ranges.sort(key=lambda length: length[2])
+
+
+def check_lengths(length):
+    for seed in seeds_2:
+        if seed[0] <= length[0] < seed[1]:
+            return length[2]
+        if length[0] <= seed[0] < length[1]:
+            return length[2] + (seed[0] - length[0])
+
+print(ranges)
+for length in ranges:
+    answer_2 = check_lengths(length)
+    if answer_2:
+        break
 
 print(answer, answer_2)
