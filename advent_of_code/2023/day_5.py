@@ -178,21 +178,21 @@ def final_ranges(ranges):
         new_ranges = []
         for length in ranges:
             for transform in transform_type:
-                if length[1] < transform.destination_start:
+                if length[1] <= transform.destination_start:
                     new_ranges.append(length)
                     break
-                elif transform.destination_start > length[0] and transform.destination_start + transform.length <= length[1]:
+                elif transform.destination_start >= length[0] and transform.destination_start + transform.length <= length[1]:
                     new_ranges.append((length[0], transform.destination_start, length[2]))
                     new_ranges.append((transform.sourse_start, transform.sourse_start + transform.length, length[2] + (transform.destination_start - length[0])))
                     length = (transform.destination_start + transform.length, length[1], length[2] + (transform.destination_start - length[0]) + transform.length)
-                elif length[0] >= transform.destination_start and length[1] < transform.destination_start + transform.length:
+                elif length[0] >= transform.destination_start and length[1] <= transform.destination_start + transform.length:
                     new_ranges.append((transform.sourse_start + (length[0] - transform.destination_start), transform.sourse_start + (length[1] - transform.destination_start), length[2]))
                     break
-                elif transform.destination_start <= length[1] < transform.destination_start + transform.length:
+                elif transform.destination_start < length[1] <= transform.destination_start + transform.length:
                     new_ranges.append((length[0], transform.destination_start, length[2]))
                     new_ranges.append((transform.sourse_start, transform.sourse_start + transform.length, length[2] + (transform.destination_start - length[0])))
                     break
-                elif transform.destination_start >= length[0] and length[1] > transform.destination_start + transform.length:
+                elif transform.destination_start >= length[0] and length[1] >= transform.destination_start + transform.length:
                     new_ranges.append((transform.sourse_start + (length[0] - transform.destination_start), transform.sourse_start + transform.length, length[2]))
                     length = (transform.destination_start + transform.length, length[1], length[2] + (transform.destination_start - length[0]))
             else:
