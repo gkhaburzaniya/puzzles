@@ -142,7 +142,6 @@ locations.extend(humidities)
 
 
 answer = min(locations)
-answer_2 = None
 
 for i, transform_type in enumerate(all_transforms):
     all_transforms[i] = sorted(transform_type)
