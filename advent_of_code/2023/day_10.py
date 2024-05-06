@@ -1,4 +1,4 @@
-#TODO implement floodfill
+# TODO implement floodfill
 
 puzzle_input = open("inputs/day_10.txt")
 
@@ -103,8 +103,11 @@ maze.append([ground] * puzzle_size)
 cur_loc = find_first_move(start_location)
 prev_loc = start_location
 steps = 1
+loop_tiles = [start_location]
+
 while cur_loc:
     steps += 1
+    loop_tiles.append(cur_loc)
     cur_loc, prev_loc = (
         find_next_location(cur_loc, prev_loc),
         cur_loc
@@ -112,18 +115,6 @@ while cur_loc:
 
 answer = (steps - 1)//2
 
-
-cur_loc = find_first_move(start_location)
-prev_loc = start_location
-loop_tiles = [start_location]
-steps = 1
-while cur_loc != start_location:
-    steps += 1
-    loop_tiles.append(cur_loc)
-    cur_loc, prev_loc = (
-        find_next_location(cur_loc, prev_loc),
-        cur_loc
-    )
 
 first_move = loop_tiles[1]
 last_move = loop_tiles[-1]
