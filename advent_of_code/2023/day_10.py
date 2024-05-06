@@ -1,3 +1,5 @@
+#TODO implement floodfill
+
 puzzle_input = open("inputs/day_10.txt")
 
 ns = "|"
