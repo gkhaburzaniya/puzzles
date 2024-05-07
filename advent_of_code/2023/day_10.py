@@ -89,10 +89,8 @@ for i, line in enumerate(puzzle_input):
     if i == 0:
         puzzle_size = len(line)
         maze.append([ground] * puzzle_size)
-    maze.append([])
+    maze.append([ground])
     for j, char in enumerate(line):
-        if j == 0:
-            maze[i+1].append(ground)
         if char == start:
             start_location = (i+1, j+1)
         maze[i+1].append(char)
