@@ -1,6 +1,6 @@
 # TODO implement floodfill
 
-puzzle_input = open("inputs/day_10.txt")
+puzzle_input = open("inputs/day_10.txt").readlines()
 
 ns = "|"
 ew = "-"
@@ -42,71 +42,67 @@ def find_next_location(current_location, previous_location):
     current_symbol = maze[current_location]
     if current_symbol == ns:
         return (
-            simple_check((current_location[0] - 1, current_location[1]),
+            simple_check((current_location[0], current_location[1] - 1),
                          previous_location) or
-            simple_check((current_location[0] + 1, current_location[1]),
+            simple_check((current_location[0], current_location[1] + 1),
                          previous_location)
         )
     elif current_symbol == ew:
         return (
-            simple_check((current_location[0], current_location[1] + 1),
+            simple_check((current_location[0] + 1, current_location[1]),
                          previous_location) or
-            simple_check((current_location[0], current_location[1] - 1),
+            simple_check((current_location[0] - 1, current_location[1]),
                          previous_location)
         )
     elif current_symbol == ne:
         return (
-            simple_check((current_location[0] - 1, current_location[1]),
+            simple_check((current_location[0], current_location[1] - 1),
                          previous_location) or
-            simple_check((current_location[0], current_location[1] + 1),
+            simple_check((current_location[0] + 1, current_location[1]),
                          previous_location)
         )
     elif current_symbol == nw:
         return (
-            simple_check((current_location[0], current_location[1] - 1),
-                         previous_location) or
             simple_check((current_location[0] - 1, current_location[1]),
+                         previous_location) or
+            simple_check((current_location[0], current_location[1] - 1),
                          previous_location)
         )
     elif current_symbol == sw:
         return (
-            simple_check((current_location[0] + 1, current_location[1]),
+            simple_check((current_location[0], current_location[1] + 1),
                          previous_location) or
-            simple_check((current_location[0], current_location[1] - 1),
+            simple_check((current_location[0] - 1, current_location[1]),
                          previous_location)
         )
     elif current_symbol == se:
         return (
-            simple_check((current_location[0] + 1, current_location[1]),
-                         previous_location) or
             simple_check((current_location[0], current_location[1] + 1),
+                         previous_location) or
+            simple_check((current_location[0] - 1, current_location[1]),
                          previous_location)
         )
 
 
 maze = {}
-start_location = None
 
-maze[-1, -1] = ground
+puzzle_size = len(puzzle_input[0]), len(puzzle_input)
+
 for y, line in enumerate(puzzle_input):
-    if y == 0:
-        puzzle_size = len(line)
-        for x in range(puzzle_size):
-            maze[x, -1] = ground
-    maze[-1, y] = ground
-    maze[puzzle_size, y] = ground
+    line = line.strip()
     for x, char in enumerate(line):
         if char == start:
             start_location = (x, y)
         maze[x, y] = char
-    last_y = y
 
-maze[-1, last_y + 1] = ground
-maze[puzzle_size, -1] = ground
-maze[puzzle_size, last_y + 1] = ground
-for x in range(puzzle_size):
-    maze[x, last_y + 1] = ground
 
+for x in range(-1, puzzle_size[0]):
+    maze[x, -1] = ground
+    maze[x, puzzle_size[1]] = ground
+
+for y in range(-1, puzzle_size[1]):
+    maze[-1, y] = ground
+    maze[puzzle_size[0], y] = ground
 
 cur_loc = find_first_move(start_location)
 prev_loc = start_location
