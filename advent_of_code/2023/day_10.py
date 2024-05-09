@@ -79,7 +79,7 @@ def find_next_location(current_location, previous_location):
         return (
             simple_check((current_location[0], current_location[1] + 1),
                          previous_location) or
-            simple_check((current_location[0] - 1, current_location[1]),
+            simple_check((current_location[0] + 1, current_location[1]),
                          previous_location)
         )
 
