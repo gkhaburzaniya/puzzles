@@ -86,7 +86,7 @@ def find_next_location(current_location, previous_location):
 
 maze = {}
 
-puzzle_size = len(puzzle_input[0]), len(puzzle_input)
+puzzle_size = (len(puzzle_input[0]) - 1, len(puzzle_input))
 
 for y, line in enumerate(puzzle_input):
     line = line.strip()
@@ -94,13 +94,13 @@ for y, line in enumerate(puzzle_input):
         if char == start:
             start_location = (x, y)
         maze[x, y] = char
+raw_maze = maze.copy()
 
-
-for x in range(-1, puzzle_size[0]):
+for x in range(-1, puzzle_size[0] + 1):
     maze[x, -1] = ground
     maze[x, puzzle_size[1]] = ground
 
-for y in range(-1, puzzle_size[1]):
+for y in range(-1, puzzle_size[1] + 1):
     maze[-1, y] = ground
     maze[puzzle_size[0], y] = ground
 
@@ -140,70 +140,79 @@ elif start_location[0] - 1 in first_last_ys:
 else:
     start_symbol = ew
 
-# horizontal_complements = {ns: [ns, ne, se],
-#                           ew: [],
-#                           ne: [],
-#                           nw: [ns, ne],
-#                           sw: [ns, se],
-#                           se: []}
-#
-# vertical_complements = {ns: [],
-#                         ew: [ew, ne, se],
-#                         ne: [ew, sw],
-#                         nw: [ew, ne],
-#                         sw: [],
-#                         se: []
-#                         }
-#
-# maze[start_location[0]][start_location[1]] = start_symbol
-# new_maze = {}
-# for y in range(len(maze)):
-#     for x in range(puzzle_size):
-#         tile = maze[y][x]
-#         new_maze[2 * x + 1, 2 * y + 1] = ground
-#         if tile == ground:
-#             new_maze[2 * x, 2 * y] = ground
-#             new_maze[2 * x + 1, 2 * y] = ground
-#             new_maze[2 * x, 2 * y + 1] = ground
-#         else:
-#             new_maze[2 * x, 2 * y] = wall
-#             if maze[x + 1]
+horizontal_complements = {ns: [ns, ne, se, ground],
+                          ew: [ground],
+                          ne: [ground],
+                          nw: [ns, ne, ground],
+                          sw: [ns, se, ground],
+                          se: [ground]}
 
-#
-# tiles_in_loop = 0
-#
-# for y in range(len(maze)):
-#     for x in range(puzzle_size):
-#         tiles_above = []
-#         if (y, x) not in loop_tiles:
-#             for loop_tile in loop_tiles:
-#                 if loop_tile[0] < y and loop_tile[1] == x:
-#                     maze_symbol = maze[loop_tile[0]][loop_tile[1]]
-#                     if maze_symbol == start:
-#                         maze_symbol = start_symbol
-#                     if maze_symbol != ns:
-#                         tiles_above.append(maze_symbol)
-#         num_up = 0
-#         nws = 0
-#         nes = 0
-#         sws = 0
-#         ses = 0
-#         # "F" + "J" means 1, "F" + "L" means 2
-#         for symbol in tiles_above:
-#             if symbol == ew:
-#                 num_up += 1
-#             if symbol == nw:
-#                 nws += 1
-#             if symbol == ne:
-#                 nes += 1
-#             if symbol == sw:
-#                 sws += 1
-#             if symbol == se:
-#                 ses += 1
-#         num_up += ses + nes
-#         if num_up % 2 == 1:
-#             tiles_in_loop += 1
-#
-# answer_2 = tiles_in_loop
+vertical_complements = {ns: [ground],
+                        ew: [ew, ne, se, ground],
+                        ne: [ew, sw, ground],
+                        nw: [ew, ne, ground],
+                        sw: [ground],
+                        se: [ground]
+                        }
 
-print(answer)
+maze[start_location[0], start_location[1]] = start_symbol
+new_maze = {}
+
+for x in range(-1, 2 * puzzle_size[0] + 1):
+    new_maze[x, -1] = ground
+    new_maze[x, 2 * puzzle_size[1]] = ground
+
+for y in range(-1, 2 * puzzle_size[1] + 1):
+    new_maze[-1, y] = ground
+    new_maze[2 * puzzle_size[0], y] = ground
+
+for x in range(-2, 2 * puzzle_size[0] + 2):
+    new_maze[x, -2] = wall
+    new_maze[x, 2 * puzzle_size[1] + 1] = wall
+
+for y in range(-2, 2 * puzzle_size[1] + 2):
+    new_maze[-2, y] = wall
+    new_maze[2 * puzzle_size[0] + 1, y] = ground
+
+
+for x in range(puzzle_size[0]):
+    for y in range(puzzle_size[1]):
+        tile = maze[x, y]
+        new_maze[2 * x + 1, 2 * y + 1] = ground
+        if tile == ground:
+            new_maze[2 * x, 2 * y] = ground
+            new_maze[2 * x + 1, 2 * y] = ground
+            new_maze[2 * x, 2 * y + 1] = ground
+        else:
+            new_maze[2 * x, 2 * y] = wall
+            if maze[x + 1, y] in horizontal_complements[tile]:
+                new_maze[2 * x + 1, 2 * y] = ground
+            else:
+                new_maze[2 * x + 1, 2 * y] = wall
+            if maze[x, y + 1] in vertical_complements[tile]:
+                new_maze[2 * x, 2 * y + 1] = ground
+            else:
+                new_maze[2 * x, 2 * y + 1] = wall
+
+
+def floodfill(location):
+    if new_maze[location] != ground:
+        return
+    new_maze[location] = "inside"
+    floodfill((location[0], location[1] + 1))
+    floodfill((location[0], location[1] - 1))
+    floodfill((location[0] - 1, location[1]))
+    floodfill((location[0] + 1, location[1]))
+
+
+floodfill((-1, -1))
+tiles_in_loop = 0
+for x in range(puzzle_size[0]):
+    for y in range(puzzle_size[1]):
+        if new_maze[2 * x, 2 * y] == ground:
+            tiles_in_loop += 1
+
+
+answer_2 = tiles_in_loop
+
+print(answer, answer_2)
