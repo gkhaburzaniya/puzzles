@@ -172,7 +172,7 @@ for x in range(-2, 2 * puzzle_size[0] + 2):
 
 for y in range(-2, 2 * puzzle_size[1] + 2):
     new_maze[-2, y] = wall
-    new_maze[2 * puzzle_size[0] + 1, y] = ground
+    new_maze[2 * puzzle_size[0] + 1, y] = wall
 
 
 for x in range(puzzle_size[0]):
@@ -195,17 +195,16 @@ for x in range(puzzle_size[0]):
                 new_maze[2 * x, 2 * y + 1] = wall
 
 
-def floodfill(location):
-    if new_maze[location] != ground:
-        return
-    new_maze[location] = "inside"
-    floodfill((location[0], location[1] + 1))
-    floodfill((location[0], location[1] - 1))
-    floodfill((location[0] - 1, location[1]))
-    floodfill((location[0] + 1, location[1]))
+nodes_to_check = [(-1, -1)]
+while nodes_to_check:
+    location = nodes_to_check.pop()
+    if new_maze[location] == ground:
+        new_maze[location] = "inside"
+        nodes_to_check.append((location[0], location[1] + 1))
+        nodes_to_check.append((location[0], location[1] - 1))
+        nodes_to_check.append((location[0] - 1, location[1]))
+        nodes_to_check.append((location[0] + 1, location[1]))
 
-
-floodfill((-1, -1))
 tiles_in_loop = 0
 for x in range(puzzle_size[0]):
     for y in range(puzzle_size[1]):
