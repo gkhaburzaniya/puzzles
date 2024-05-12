@@ -1,5 +1,3 @@
-# TODO implement floodfill
-
 puzzle_input = open("inputs/day_10.txt").readlines()
 
 ns = "|"
@@ -16,13 +14,13 @@ wall = "#"
 def find_first_move(current_location, previous_location=None):
 
     return (
-        check_location((current_location[0] - 1, current_location[1]),
-                       previous_location, [ns, sw, se]) or
-        check_location((current_location[0], current_location[1] + 1),
-                       previous_location, [ew, nw, sw]) or
-        check_location((current_location[0] + 1, current_location[1]),
-                       previous_location, [ns, ne, nw]) or
         check_location((current_location[0], current_location[1] - 1),
+                       previous_location, [ns, sw, se]) or
+        check_location((current_location[0] + 1, current_location[1]),
+                       previous_location, [ew, nw, sw]) or
+        check_location((current_location[0], current_location[1] + 1),
+                       previous_location, [ns, ne, nw]) or
+        check_location((current_location[0] - 1, current_location[1]),
                        previous_location, [ew, ne, se])
     )
 
