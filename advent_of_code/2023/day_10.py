@@ -11,16 +11,32 @@ start = "S"
 wall = "#"
 
 
+def north(loc):
+    return loc[0], loc[1] - 1
+
+
+def east(loc):
+    return loc[0] + 1, loc[1]
+
+
+def south(loc):
+    return loc[0], loc[1] + 1
+
+
+def west(loc):
+    return loc[0] - 1, loc[1]
+
+
 def find_first_move(current_location, previous_location=None):
 
     return (
-        check_location((current_location[0], current_location[1] - 1),
+        check_location(north(current_location),
                        previous_location, [ns, sw, se]) or
-        check_location((current_location[0] + 1, current_location[1]),
+        check_location(east(current_location),
                        previous_location, [ew, nw, sw]) or
-        check_location((current_location[0], current_location[1] + 1),
+        check_location(south(current_location),
                        previous_location, [ns, ne, nw]) or
-        check_location((current_location[0] - 1, current_location[1]),
+        check_location(west(current_location),
                        previous_location, [ew, ne, se])
     )
 
@@ -40,45 +56,33 @@ def find_next_location(current_location, previous_location):
     current_symbol = maze[current_location]
     if current_symbol == ns:
         return (
-            simple_check((current_location[0], current_location[1] - 1),
-                         previous_location) or
-            simple_check((current_location[0], current_location[1] + 1),
-                         previous_location)
+            simple_check(north(current_location), previous_location) or
+            simple_check(south(current_location), previous_location)
         )
     elif current_symbol == ew:
         return (
-            simple_check((current_location[0] + 1, current_location[1]),
-                         previous_location) or
-            simple_check((current_location[0] - 1, current_location[1]),
-                         previous_location)
+            simple_check(east(current_location), previous_location) or
+            simple_check(west(current_location), previous_location)
         )
     elif current_symbol == ne:
         return (
-            simple_check((current_location[0], current_location[1] - 1),
-                         previous_location) or
-            simple_check((current_location[0] + 1, current_location[1]),
-                         previous_location)
+            simple_check(north(current_location), previous_location) or
+            simple_check(east(current_location), previous_location)
         )
     elif current_symbol == nw:
         return (
-            simple_check((current_location[0] - 1, current_location[1]),
-                         previous_location) or
-            simple_check((current_location[0], current_location[1] - 1),
-                         previous_location)
+            simple_check(north(current_location), previous_location) or
+            simple_check(west(current_location), previous_location)
         )
     elif current_symbol == sw:
         return (
-            simple_check((current_location[0], current_location[1] + 1),
-                         previous_location) or
-            simple_check((current_location[0] - 1, current_location[1]),
-                         previous_location)
+            simple_check(south(current_location), previous_location) or
+            simple_check(west(current_location), previous_location)
         )
     elif current_symbol == se:
         return (
-            simple_check((current_location[0], current_location[1] + 1),
-                         previous_location) or
-            simple_check((current_location[0] + 1, current_location[1]),
-                         previous_location)
+            simple_check(south(current_location), previous_location) or
+            simple_check(east(current_location), previous_location)
         )
 
 
@@ -198,15 +202,15 @@ while nodes_to_check:
     location = nodes_to_check.pop()
     if new_maze[location] == ground:
         new_maze[location] = "inside"
-        nodes_to_check.append((location[0], location[1] + 1))
-        nodes_to_check.append((location[0], location[1] - 1))
-        nodes_to_check.append((location[0] - 1, location[1]))
-        nodes_to_check.append((location[0] + 1, location[1]))
+        nodes_to_check.append(north(location))
+        nodes_to_check.append(east(location))
+        nodes_to_check.append(south(location))
+        nodes_to_check.append(west(location))
 
 tiles_in_loop = 0
 for x in range(puzzle_size[0]):
     for y in range(puzzle_size[1]):
-        if new_maze[2 * x, 2 * y] == ground:
+        if new_maze[2 * x, 2 * y] == "inside":
             tiles_in_loop += 1
 
 
