@@ -143,18 +143,18 @@ else:
     start_symbol = ew
 
 horizontal_complements = {ns: [ns, ne, se, ground],
-                          ew: [ground],
-                          ne: [ground],
-                          nw: [ns, ne, ground],
-                          sw: [ns, se, ground],
-                          se: [ground]}
+                          ew: [],
+                          ne: [],
+                          nw: [ns, ne, se, ground],
+                          sw: [ns, ne, se, ground],
+                          se: []}
 
-vertical_complements = {ns: [ground],
-                        ew: [ew, ne, se, ground],
-                        ne: [ew, sw, ground],
-                        nw: [ew, ne, ground],
-                        sw: [ground],
-                        se: [ground]
+vertical_complements = {ns: [],
+                        ew: [ew, sw, se, ground],
+                        ne: [ew, sw, se, ground],
+                        nw: [ew, sw, se, ground],
+                        sw: [],
+                        se: []
                         }
 
 maze[start_location[0], start_location[1]] = start_symbol
@@ -196,24 +196,25 @@ for x in range(puzzle_size[0]):
             else:
                 new_maze[2 * x, 2 * y + 1] = wall
 
-
-nodes_to_check = [(-1, -1)]
+new_start_location = (2 * start_location[0], 2 * start_location[1])
+nodes_to_check = [south(west(new_start_location))]
+tiles_in_loop = []
 while nodes_to_check:
     location = nodes_to_check.pop()
-    if new_maze[location] == ground:
+    if location[0] == -1:
+        nodes_to_check = [south(east(new_start_location))]
+        tiles_in_loop = []
+    elif new_maze[location] == ground:
         new_maze[location] = "inside"
+        if location[0] % 2 == 0 and location[1] % 2 == 0:
+            tiles_in_loop.append((location[0] // 2, location[1] // 2))
         nodes_to_check.append(north(location))
         nodes_to_check.append(east(location))
         nodes_to_check.append(south(location))
         nodes_to_check.append(west(location))
 
-tiles_in_loop = 0
-for x in range(puzzle_size[0]):
-    for y in range(puzzle_size[1]):
-        if new_maze[2 * x, 2 * y] == "inside":
-            tiles_in_loop += 1
 
-
-answer_2 = tiles_in_loop
+print(tiles_in_loop)
+answer_2 = len(tiles_in_loop)
 
 print(answer, answer_2)
