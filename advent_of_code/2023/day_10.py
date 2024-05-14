@@ -123,9 +123,10 @@ answer = (steps - 1)//2
 
 
 first_move = loop_tiles[1]
-last_move = loop_tiles[-1]
+last_move = loop_tiles[-2]
 first_last_ys = [first_move[0], last_move[0]]
 first_last_xs = [first_move[1], last_move[1]]
+
 
 if start_location[0] + 1 in first_last_ys:
     if start_location[1] + 1 in first_last_xs:
