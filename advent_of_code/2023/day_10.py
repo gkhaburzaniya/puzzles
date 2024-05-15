@@ -180,6 +180,8 @@ for y in range(-2, 2 * puzzle_size[1] + 2):
 
 for x in range(puzzle_size[0]):
     for y in range(puzzle_size[1]):
+        if (x, y) not in loop_tiles:
+            maze[x, y] = ground
         tile = maze[x, y]
         new_maze[2 * x + 1, 2 * y + 1] = ground
         if tile == ground:
@@ -204,18 +206,20 @@ while nodes_to_check:
     location = nodes_to_check.pop()
     if location[0] == -1:
         nodes_to_check = [south(east(new_start_location))]
+        for tile in tiles_in_loop:
+            new_maze[tile] = ground
         tiles_in_loop = []
     elif new_maze[location] == ground:
         new_maze[location] = "inside"
         if location[0] % 2 == 0 and location[1] % 2 == 0:
-            tiles_in_loop.append((location[0] // 2, location[1] // 2))
+            tiles_in_loop.append(location)
         nodes_to_check.append(north(location))
         nodes_to_check.append(east(location))
         nodes_to_check.append(south(location))
         nodes_to_check.append(west(location))
 
-
-print(tiles_in_loop)
+orig_tiles = [(x[0]//2, x[1]//2) for x in tiles_in_loop]
+print(orig_tiles)
 answer_2 = len(tiles_in_loop)
 
 print(answer, answer_2)
