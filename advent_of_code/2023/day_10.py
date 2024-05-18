@@ -225,7 +225,6 @@ while nodes_to_check:
         nodes_to_check.append(west(location))
 
 orig_tiles = [(x[0]//2, x[1]//2) for x in tiles_in_loop]
-print(orig_tiles)
 answer_2 = len(tiles_in_loop)
 
 print(answer, answer_2)

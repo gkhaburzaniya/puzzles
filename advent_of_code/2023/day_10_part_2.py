@@ -131,7 +131,7 @@ else:
     start_symbol = ew
 
 
-tiles_in_loop = 0
+tiles_in_loop = []
 
 for y in range(len(maze)):
     for x in range(puzzle_size):
@@ -163,6 +163,12 @@ for y in range(len(maze)):
                 ses += 1
         num_up += ses + nes
         if num_up % 2 == 1:
-            tiles_in_loop += 1
+            tiles_in_loop.append((x, y))
 
-print(tiles_in_loop)
+print(len(tiles_in_loop))
+import day_10
+missing_tiles = [tile for tile in tiles_in_loop if tile not in day_10.orig_tiles]
+extra_tiles = [tile for tile in day_10.orig_tiles if tile not in tiles_in_loop]
+
+print(missing_tiles)
+print(extra_tiles)
