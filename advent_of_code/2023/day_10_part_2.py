@@ -171,9 +171,12 @@ missing_tiles = [tile for tile in tiles_in_loop if tile not in day_10.orig_tiles
 extra_tiles = [tile for tile in day_10.orig_tiles if tile not in tiles_in_loop]
 same_tiles = [tile for tile in tiles_in_loop if tile in day_10.orig_tiles]
 
+print("Missing Tiles")
 print(missing_tiles)
 print(len(missing_tiles))
+print("Extra Tiles")
 print(extra_tiles)
 print(len(extra_tiles))
+print("Same Tiles")
 print(same_tiles)
 print(len(same_tiles))
