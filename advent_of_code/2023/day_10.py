@@ -200,18 +200,23 @@ for x in range(puzzle_size[0]):
                 new_maze[2 * x, 2 * y + 1] = wall
 
 foo = open('foo', 'w')
-for x in range(-2, 2 * puzzle_size[0] + 2):
-    for y in range(-2, 2 * puzzle_size[1] + 2):
+for y in range(-2, 2 * puzzle_size[1] + 2):
+    for x in range(-2, 2 * puzzle_size[0] + 2):
         foo.write(new_maze[x, y])
     foo.write('\n')
 
 new_start_location = (2 * start_location[0], 2 * start_location[1])
-nodes_to_check = [south(west(new_start_location))]
+start_nodes = [north(east(new_start_location)),
+               south(east(new_start_location)),
+               south(west(new_start_location)),
+               north(west(new_start_location)),]
+start_nodes = [node for node in start_nodes if new_maze[node] == ground]
+nodes_to_check = [start_nodes.pop()]
 tiles_in_loop = []
 while nodes_to_check:
     location = nodes_to_check.pop()
-    if location[0] == -1:
-        nodes_to_check = [south(east(new_start_location))]
+    if location[0] == -1 or location[1] == -1:
+        nodes_to_check = [start_nodes.pop()]
         for tile in tiles_in_loop:
             new_maze[tile] = ground
         tiles_in_loop = []
