@@ -216,7 +216,6 @@ tiles_in_loop = []
 while nodes_to_check:
     location = nodes_to_check.pop()
     if location[0] == -1 or location[1] == -1:
-        nodes_to_check = [start_nodes.pop()]
         for tile in tiles_in_loop:
             new_maze[tile] = ground
         tiles_in_loop = []
@@ -228,6 +227,8 @@ while nodes_to_check:
         nodes_to_check.append(east(location))
         nodes_to_check.append(south(location))
         nodes_to_check.append(west(location))
+    if not nodes_to_check and not tiles_in_loop:
+        nodes_to_check = [start_nodes.pop()]
 
 orig_tiles = [(x[0]//2, x[1]//2) for x in tiles_in_loop]
 answer_2 = len(tiles_in_loop)
