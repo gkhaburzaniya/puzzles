@@ -177,11 +177,14 @@ for y in range(-2, 2 * puzzle_size[1] + 2):
     new_maze[-2, y] = wall
     new_maze[2 * puzzle_size[0] + 1, y] = wall
 
-
 for x in range(puzzle_size[0]):
     for y in range(puzzle_size[1]):
         if (x, y) not in loop_tiles:
             maze[x, y] = ground
+
+
+for x in range(puzzle_size[0]):
+    for y in range(puzzle_size[1]):
         tile = maze[x, y]
         new_maze[2 * x + 1, 2 * y + 1] = ground
         if tile == ground:
