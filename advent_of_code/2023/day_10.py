@@ -1,3 +1,5 @@
+import time
+start_time = time.time()
 puzzle_input = open("inputs/day_10.txt").readlines()
 
 ns = "|"
@@ -202,12 +204,6 @@ for x in range(puzzle_size[0]):
             else:
                 new_maze[2 * x, 2 * y + 1] = wall
 
-foo = open('foo', 'w')
-for y in range(-2, 2 * puzzle_size[1] + 2):
-    for x in range(-2, 2 * puzzle_size[0] + 2):
-        foo.write(new_maze[x, y])
-    foo.write('\n')
-
 new_start_location = (2 * start_location[0], 2 * start_location[1])
 start_nodes = [north(east(new_start_location)),
                south(east(new_start_location)),
@@ -237,3 +233,4 @@ orig_tiles = [(x[0]//2, x[1]//2) for x in tiles_in_loop]
 answer_2 = len(tiles_in_loop)
 
 print(answer, answer_2)
+print(time.time() - start_time)

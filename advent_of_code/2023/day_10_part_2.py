@@ -1,3 +1,5 @@
+import time
+start_time = time.time()
 puzzle_input = open("inputs/day_10.txt")
 
 ns = "|"
@@ -166,6 +168,7 @@ for y in range(len(maze)):
             tiles_in_loop.append((x, y))
 
 print(len(tiles_in_loop))
+print(time.time() - start_time)
 import day_10
 missing_tiles = [tile for tile in tiles_in_loop if tile not in day_10.orig_tiles]
 extra_tiles = [tile for tile in day_10.orig_tiles if tile not in tiles_in_loop]
