@@ -126,24 +126,24 @@ answer = (steps - 1)//2
 
 first_move = loop_tiles[1]
 last_move = loop_tiles[-2]
-first_last_ys = [first_move[0], last_move[0]]
-first_last_xs = [first_move[1], last_move[1]]
+first_last_xs = [first_move[0], last_move[0]]
+first_last_ys = [first_move[1], last_move[1]]
 
 
-if start_location[0] + 1 in first_last_ys:
-    if start_location[1] + 1 in first_last_xs:
+if start_location[0] + 1 in first_last_xs:
+    if start_location[1] + 1 in first_last_ys:
         start_symbol = se
-    elif start_location[1] - 1 in first_last_xs:
-        start_symbol = sw
-    else:
-        start_symbol = ns
-elif start_location[0] - 1 in first_last_ys:
-    if start_location[1] + 1 in first_last_xs:
+    elif start_location[1] - 1 in first_last_ys:
         start_symbol = ne
+    else:
+        start_symbol = ew
+elif start_location[0] - 1 in first_last_xs:
+    if start_location[1] + 1 in first_last_ys:
+        start_symbol = sw
     else:
         start_symbol = nw
 else:
-    start_symbol = ew
+    start_symbol = ns
 
 horizontal_complements = {ns: [ns, ne, se, ground],
                           ew: [],
