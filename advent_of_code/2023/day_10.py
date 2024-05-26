@@ -179,13 +179,13 @@ for y in range(-2, 2 * puzzle_size[1] + 2):
     new_maze[-2, y] = wall
     new_maze[2 * puzzle_size[0] + 1, y] = wall
 
-foo = open('foo', 'w')
-for y in range(puzzle_size[1]):
-    for x in range(puzzle_size[0]):
-        if (x, y) not in loop_tiles:
-            maze[x, y] = ground
-        foo.write(maze[x, y])
-    foo.write('\n')
+# foo = open('foo', 'w')
+# for y in range(puzzle_size[1]):
+#     for x in range(puzzle_size[0]):
+#         if (x, y) not in loop_tiles:
+#             maze[x, y] = ground
+#         foo.write(maze[x, y])
+#     foo.write('\n')
 
 
 for x in range(puzzle_size[0]):
@@ -233,7 +233,7 @@ while nodes_to_check:
     if not nodes_to_check and not tiles_in_loop:
         nodes_to_check = [start_nodes.pop()]
 
-orig_tiles = [(x[0]//2, x[1]//2) for x in tiles_in_loop]
+# orig_tiles = [(tile[0]//2 + 1, tile[1]//2 + 1) for tile in tiles_in_loop]
 answer_2 = len(tiles_in_loop)
 
 print(answer, answer_2)
