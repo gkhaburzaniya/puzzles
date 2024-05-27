@@ -1,5 +1,5 @@
-import time
-start_time = time.time()
+from collections import defaultdict
+
 puzzle_input = open("inputs/day_10.txt").readlines()
 
 ns = "|"
@@ -145,6 +145,9 @@ elif start_location[0] - 1 in first_last_xs:
 else:
     start_symbol = ns
 
+maze[start_location[0], start_location[1]] = start_symbol
+loop_tiles = {tile: maze[tile] for tile in loop_tiles}
+
 horizontal_complements = {ns: [ns, ne, se, ground],
                           ew: [],
                           ne: [],
@@ -160,52 +163,20 @@ vertical_complements = {ns: [],
                         se: []
                         }
 
-maze[start_location[0], start_location[1]] = start_symbol
-new_maze = {}
+new_maze = defaultdict(lambda: ground)
 
-for x in range(-1, 2 * puzzle_size[0] + 1):
-    new_maze[x, -1] = ground
-    new_maze[x, 2 * puzzle_size[1]] = ground
+for key in maze.keys():
+    if key not in loop_tiles:
+        maze[key] = ground
 
-for y in range(-1, 2 * puzzle_size[1] + 1):
-    new_maze[-1, y] = ground
-    new_maze[2 * puzzle_size[0], y] = ground
-
-for x in range(-2, 2 * puzzle_size[0] + 2):
-    new_maze[x, -2] = wall
-    new_maze[x, 2 * puzzle_size[1] + 1] = wall
-
-for y in range(-2, 2 * puzzle_size[1] + 2):
-    new_maze[-2, y] = wall
-    new_maze[2 * puzzle_size[0] + 1, y] = wall
-
-# foo = open('foo', 'w')
-# for y in range(puzzle_size[1]):
-#     for x in range(puzzle_size[0]):
-#         if (x, y) not in loop_tiles:
-#             maze[x, y] = ground
-#         foo.write(maze[x, y])
-#     foo.write('\n')
-
-
-for x in range(puzzle_size[0]):
-    for y in range(puzzle_size[1]):
-        tile = maze[x, y]
-        new_maze[2 * x + 1, 2 * y + 1] = ground
-        if tile == ground:
-            new_maze[2 * x, 2 * y] = ground
-            new_maze[2 * x + 1, 2 * y] = ground
-            new_maze[2 * x, 2 * y + 1] = ground
-        else:
-            new_maze[2 * x, 2 * y] = wall
-            if maze[x + 1, y] in horizontal_complements[tile]:
-                new_maze[2 * x + 1, 2 * y] = ground
-            else:
-                new_maze[2 * x + 1, 2 * y] = wall
-            if maze[x, y + 1] in vertical_complements[tile]:
-                new_maze[2 * x, 2 * y + 1] = ground
-            else:
-                new_maze[2 * x, 2 * y + 1] = wall
+for key in loop_tiles:
+    tile = maze[key]
+    x, y = key[0], key[1]
+    new_maze[2 * x, 2 * y] = wall
+    if maze[x + 1, y] not in horizontal_complements[tile]:
+        new_maze[2 * x + 1, 2 * y] = wall
+    if maze[x, y + 1] not in vertical_complements[tile]:
+        new_maze[2 * x, 2 * y + 1] = wall
 
 new_start_location = (2 * start_location[0], 2 * start_location[1])
 start_nodes = [north(east(new_start_location)),
@@ -237,4 +208,3 @@ while nodes_to_check:
 answer_2 = len(tiles_in_loop)
 
 print(answer, answer_2)
-print(time.time() - start_time)
