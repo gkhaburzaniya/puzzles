@@ -1,25 +1,21 @@
 puzzle_input = open("inputs/day_11.txt")
+expansion_rate = 2
+expansion_rate_2 = 1000000
 
 rows = [line.strip() for line in puzzle_input]
 columns = [""] * len(rows[0])
-for row in rows:
+big_rows = []
+big_columns = []
+for j, row in enumerate(rows):
+    if "#" not in row:
+        big_rows.append(j)
     for i, char in enumerate(row):
         columns[i] += char
-        if "#" not in row:
-            columns[i] += char
 
-rows = [""] * len(columns[0])
-new_columns = []
-for column in columns:
-    new_columns.append(column)
+for i, column in enumerate(columns):
     if "#" not in column:
-        new_columns.append(column)
-    for i, char in enumerate(column):
-        rows[i] += char
-        if "#" not in column:
-            rows[i] += char
+        big_columns.append(i)
 
-columns = new_columns
 
 galaxies = []
 for x, column in enumerate(columns):
@@ -27,12 +23,26 @@ for x, column in enumerate(columns):
         if char == "#":
             galaxies.append((x, y))
 
-total_distance = 0
-for _ in range(len(galaxies)-1):
+answer = 0
+answer_2 = 0
+for _ in range(len(galaxies) - 1):
     working_galaxy = galaxies.pop()
     for galaxy in galaxies:
         distance = (abs(galaxy[0] - working_galaxy[0])
                     + abs(galaxy[1] - working_galaxy[1]))
-        total_distance += distance
+        distance_2 = (abs(galaxy[0] - working_galaxy[0])
+                      + abs(galaxy[1] - working_galaxy[1]))
+        for big_column in big_columns:
+            if (galaxy[0] < big_column < working_galaxy[0] or
+                    working_galaxy[0] < big_column < galaxy[0]):
+                distance += expansion_rate - 1
+                distance_2 += expansion_rate_2 - 1
+        for big_row in big_rows:
+            if (galaxy[1] < big_row < working_galaxy[1] or
+                    working_galaxy[1] < big_row < galaxy[1]):
+                distance += expansion_rate - 1
+                distance_2 += expansion_rate_2 - 1
+        answer += distance
+        answer_2 += distance_2
 
-print(total_distance)
+print(answer, answer_2)
