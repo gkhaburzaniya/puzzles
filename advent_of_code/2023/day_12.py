@@ -1,76 +1,69 @@
-from itertools import product
 import re
+import time
+from functools import cache
+start = time.time()
 
-from dataclasses import dataclass
-
-puzzle_input = open("inputs/day_12.txt")
-
-
-damaged = "#"
-operational = "."
-unknown = "?"
+puzzle_input = open("inputs/day_12.txt").readlines()
 
 
-@dataclass
-class Record:
-    length: int
-    start: int = 0
-    end: int = 0
+DAMAGED = "#"
+OPERATIONAL = "."
+UNKNOWN = "?"
+PATTERN = re.compile(r"#+\.")
 
 
-def find_way(some_records, some_springs):
-    prev_record = None
-    for record in some_records:
-        if not prev_record:
-            start_i = 0
-        else:
-            start_i = prev_record.end + 2
-        springs_left = some_springs[start_i:]
-        for i, spring in enumerate(springs_left):
-            if len(springs_left) < i + record.length:
-                return False
-            if (
-                    spring == damaged and
-                    operational not in springs_left[i:i + record.length] and
-                    (
-                        len(springs_left) == i + record.length or
-                        springs_left[i + record.length] != damaged
-                    )
-            ):
-                record.start = start_i + i
-                record.end = start_i + i + record.length - 1
-                prev_record = record
-                break
-            elif spring == damaged:
-                return False
-    print(records)
-    if damaged not in springs[records[-1].end + 1:]:
-        return True
-    else:
-        return False
+@cache
+def find_ways(springs, records):
+    ways = 0
+    if UNKNOWN not in springs:
+        records_filled = [len(damaged_springs) - 1
+                          for damaged_springs in PATTERN.findall(springs)]
+        if tuple(records_filled) == records:
+            ways += 1
+        return ways
+    first_unknown = springs.index(UNKNOWN)
+    records_filled = [len(damaged_springs) - 1
+                      for damaged_springs
+                      in PATTERN.findall(springs[:first_unknown])]
+    if len(records_filled) > len(records):
+        return 0
+    for i, record in enumerate(records_filled):
+        if record != records[i]:
+            return 0
+    records = records[len(records_filled):]
+    start_string = ""
+    last_damaged = re.search(r"#+\?", springs[:first_unknown + 1])
+    if last_damaged:
+        start_string = springs[last_damaged.start():first_unknown]
+    ways += find_ways(
+        start_string + OPERATIONAL + springs[first_unknown + 1:], records)
+    ways += find_ways(
+        start_string + DAMAGED + springs[first_unknown + 1:], records)
+
+    return ways
 
 
-ways = 0
+answer = 0
 for line in puzzle_input:
     words = line.split()
-    springs = words[0]
-    records = [Record(int(record)) for record in words[1].split(',')]
-    final_damageds = sum([record.length for record in records])
-    damageds = len(re.findall(r"#", springs))
-    unknowns = len(re.findall(r"\?", springs))
-    unknown_damageds = final_damageds - damageds
-    unknown_operationals = unknowns - unknown_damageds
-    possibilities = product("#.", repeat=unknowns)
-    for possibility in possibilities:
-        possibility = list(possibility)
-        if len([item for item in possibility if item == damaged]) != unknown_damageds:
-            continue
-        new_springs = ""
-        for spring in springs:
-            if spring == unknown:
-                new_springs += possibility.pop(0)
-            else:
-                new_springs += spring
-        ways += find_way(records, new_springs)
+    words[0] = words[0] + "."
+    line_springs = words[0]
+    line_records = [int(record) for record in words[1].split(',')]
 
-print(ways)
+    line_ways = find_ways(line_springs, tuple(line_records))
+    answer += line_ways
+
+
+answer_2 = 0
+for line in puzzle_input:
+    words = line.split()
+    words[0] = (words[0] + "?") * 4 + words[0] + "."
+    words[1] = (words[1] + ",") * 4 + words[1]
+    line_springs = words[0]
+    line_records = [int(record) for record in words[1].split(',')]
+
+    line_ways = find_ways(line_springs, tuple(line_records))
+    answer_2 += line_ways
+
+print(answer, answer_2)
+print(time.time() - start)
