@@ -7,18 +7,18 @@ CUBE = "#"
 total = 0
 
 field = [[*line.strip()] for line in puzzle_input]
-for i, row in enumerate(field):
-    for j, space in enumerate(row):
+for y, row in enumerate(field):
+    for x, space in enumerate(row):
         if space == ROUND:
-            for k in range(1, i + 1):
-                if field[i - k][j] != EMPTY:
-                    field[i][j] = EMPTY
-                    field[i - k + 1][j] = ROUND
-                    total += len(field) - (i - k + 1)
+            for k in range(1, y + 1):
+                if field[y - k][x] != EMPTY:
+                    field[y][x] = EMPTY
+                    field[y - k + 1][x] = ROUND
+                    total += len(field) - (y - k + 1)
                     break
             else:
-                field[i][j] = EMPTY
-                field[0][j] = ROUND
+                field[y][x] = EMPTY
+                field[0][x] = ROUND
                 total += len(field)
-
-print(total)
+answer = total
+print(answer)
