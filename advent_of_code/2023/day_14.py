@@ -1,3 +1,5 @@
+import time
+start_time = time.time()
 puzzle_input = open("inputs/day_14.txt")
 
 EMPTY = "."
@@ -75,11 +77,17 @@ def tilt_east():
 
 tilt_north()
 answer = load()
-# tilt_west()
-# tilt_south()
-# tilt_east()
-#
-# for _ in range(1_000_000_000):
-#     tilt
+tilt_west()
+tilt_south()
+tilt_east()
 
-print(answer)
+for _ in range(100_000):
+    tilt_north()
+    tilt_west()
+    tilt_south()
+    tilt_east()
+
+answer_2 = load()
+
+print(answer, answer_2)
+print(time.time() - start_time)
