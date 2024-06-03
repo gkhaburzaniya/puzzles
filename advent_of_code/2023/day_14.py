@@ -54,6 +54,7 @@ def tilt_south(field):
     return tuple(tuple(row) for row in field)
 
 
+@cache
 def tilt_west(field):
     field = [list(row) for row in field]
     for y, row in enumerate(field):
@@ -70,6 +71,7 @@ def tilt_west(field):
     return tuple(tuple(row) for row in field)
 
 
+@cache
 def tilt_east(field):
     field = [list(row) for row in field]
     for y, row in enumerate(field):
@@ -92,7 +94,7 @@ field = tilt_west(field)
 field = tilt_south(field)
 field = tilt_east(field)
 
-for _ in range(100_000):
+for _ in range(1_000_000):
     field = tilt_north(field)
     field = tilt_west(field)
     field = tilt_south(field)
