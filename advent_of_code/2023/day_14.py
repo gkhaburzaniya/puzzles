@@ -1,11 +1,12 @@
 import time
+from functools import cache
 start_time = time.time()
 puzzle_input = open("inputs/day_14.txt")
 
 EMPTY = "."
 ROUND = "O"
 CUBE = "#"
-field = [[*line.strip()] for line in puzzle_input]
+field = tuple((*line.strip(),) for line in puzzle_input)
 max_y = len(field) - 1
 max_x = len(field[0]) - 1
 
@@ -19,7 +20,9 @@ def load():
     return north_load
 
 
-def tilt_north():
+@cache
+def tilt_north(field):
+    field = [list(row) for row in field]
     for y, row in enumerate(field):
         for x, space in enumerate(row):
             if space == ROUND:
@@ -31,9 +34,12 @@ def tilt_north():
                 else:
                     field[y][x] = EMPTY
                     field[0][x] = ROUND
+    return tuple(tuple(row) for row in field)
 
 
-def tilt_south():
+@cache
+def tilt_south(field):
+    field = [list(row) for row in field]
     for y, row in enumerate(field):
         for x, space in enumerate(row):
             if space == ROUND:
@@ -45,9 +51,11 @@ def tilt_south():
                 else:
                     field[y][x] = EMPTY
                     field[max_y][x] = ROUND
+    return tuple(tuple(row) for row in field)
 
 
-def tilt_west():
+def tilt_west(field):
+    field = [list(row) for row in field]
     for y, row in enumerate(field):
         for x, space in enumerate(row):
             if space == ROUND:
@@ -59,9 +67,11 @@ def tilt_west():
                 else:
                     field[y][x] = EMPTY
                     field[y][0] = ROUND
+    return tuple(tuple(row) for row in field)
 
 
-def tilt_east():
+def tilt_east(field):
+    field = [list(row) for row in field]
     for y, row in enumerate(field):
         for x, space in enumerate(row):
             if space == ROUND:
@@ -73,19 +83,20 @@ def tilt_east():
                 else:
                     field[y][x] = EMPTY
                     field[y][max_x] = ROUND
+    return tuple(tuple(row) for row in field)
 
 
-tilt_north()
+field = tilt_north(field)
 answer = load()
-tilt_west()
-tilt_south()
-tilt_east()
+field = tilt_west(field)
+field = tilt_south(field)
+field = tilt_east(field)
 
 for _ in range(100_000):
-    tilt_north()
-    tilt_west()
-    tilt_south()
-    tilt_east()
+    field = tilt_north(field)
+    field = tilt_west(field)
+    field = tilt_south(field)
+    field = tilt_east(field)
 
 answer_2 = load()
 
