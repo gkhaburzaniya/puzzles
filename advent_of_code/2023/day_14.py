@@ -94,11 +94,13 @@ field = tilt_west(field)
 field = tilt_south(field)
 field = tilt_east(field)
 
-for _ in range(1_000_000):
+for _ in range(1_000_000_000):
     field = tilt_north(field)
     field = tilt_west(field)
     field = tilt_south(field)
     field = tilt_east(field)
+    if tilt_north.cache_info().hits > 0:
+        break
 
 answer_2 = load()
 
