@@ -40,7 +40,8 @@ def tilt_north(field):
 @cache
 def tilt_south(field):
     field = [list(row) for row in field]
-    for y, row in enumerate(field):
+    for y in range(max_y, -1, -1):
+        row = field[y]
         for x, space in enumerate(row):
             if space == ROUND:
                 for k in range(1, max_y - y + 1):
@@ -88,11 +89,29 @@ def tilt_east(field):
     return tuple(tuple(row) for row in field)
 
 
+def print_field():
+    for y in range(max_y + 1):
+        for x in range(max_x + 1):
+            print(field[y][x], end="")
+        print("")
+
+
+
+print_field()
+print(load())
 field = tilt_north(field)
 answer = load()
+print_field()
+print(load())
 field = tilt_west(field)
+print_field()
+print(load())
 field = tilt_south(field)
+print_field()
+print(load())
 field = tilt_east(field)
+print_field()
+print(load())
 
 for _ in range(1_000_000_000):
     field = tilt_north(field)
