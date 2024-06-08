@@ -76,7 +76,8 @@ def tilt_west(field):
 def tilt_east(field):
     field = [list(row) for row in field]
     for y, row in enumerate(field):
-        for x, space in enumerate(row):
+        for x in range(max_x, -1, -1):
+            space = field[y][x]
             if space == ROUND:
                 for k in range(1, max_x - x + 1):
                     if field[y][x + k] != EMPTY:
@@ -96,28 +97,21 @@ def print_field():
         print("")
 
 
-
-print_field()
-print(load())
 field = tilt_north(field)
 answer = load()
-print_field()
-print(load())
 field = tilt_west(field)
-print_field()
-print(load())
 field = tilt_south(field)
-print_field()
-print(load())
 field = tilt_east(field)
 print_field()
 print(load())
 
-for _ in range(1_000_000_000):
+for _ in range(2):
     field = tilt_north(field)
     field = tilt_west(field)
     field = tilt_south(field)
     field = tilt_east(field)
+    print_field()
+    print(load())
     if tilt_north.cache_info().hits > 0:
         break
 
