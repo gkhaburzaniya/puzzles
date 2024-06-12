@@ -11,7 +11,7 @@ max_y = len(field) - 1
 max_x = len(field[0]) - 1
 
 
-def load():
+def load(field):
     north_load = 0
     for y, row in enumerate(field):
         for x, space in enumerate(row):
@@ -98,22 +98,28 @@ def print_field():
 
 
 field = tilt_north(field)
-answer = load()
+answer = load(field)
 field = tilt_west(field)
 field = tilt_south(field)
 field = tilt_east(field)
 
-
-for i in range(1000):
+fields = []
+total_cycles = 1_000_000_000
+for _ in range(total_cycles):
     field = tilt_north(field)
     field = tilt_west(field)
     field = tilt_south(field)
     field = tilt_east(field)
     if tilt_north.cache_info().hits > 0:
-        # TODO add cycles
-        break
+        try:
+            last_hit = len(fields) - fields[::-1].index(field) - 1
+            cycle_length = len(fields) - last_hit
+            break
+        except ValueError:
+            fields.append(field)
 
-answer_2 = load()
+remainder = total_cycles % cycle_length
+answer_2 = load(fields[::-1][remainder - 2])
 
 print(answer, answer_2)
 print(time.time() - start_time)
