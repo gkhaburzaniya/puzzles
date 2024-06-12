@@ -102,17 +102,15 @@ answer = load()
 field = tilt_west(field)
 field = tilt_south(field)
 field = tilt_east(field)
-print_field()
-print(load())
 
-for _ in range(2):
+
+for i in range(1000):
     field = tilt_north(field)
     field = tilt_west(field)
     field = tilt_south(field)
     field = tilt_east(field)
-    print_field()
-    print(load())
     if tilt_north.cache_info().hits > 0:
+        # TODO add cycles
         break
 
 answer_2 = load()
