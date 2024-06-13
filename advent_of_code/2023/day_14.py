@@ -105,7 +105,7 @@ field = tilt_east(field)
 
 fields = []
 total_cycles = 1_000_000_000
-for _ in range(total_cycles):
+for i in range(total_cycles):
     field = tilt_north(field)
     field = tilt_west(field)
     field = tilt_south(field)
@@ -118,8 +118,8 @@ for _ in range(total_cycles):
         except ValueError:
             fields.append(field)
 
-remainder = total_cycles % cycle_length
-answer_2 = load(fields[::-1][remainder - 2])
+remainder = (total_cycles - i - 2) % cycle_length
+answer_2 = load(fields[remainder])
 
 print(answer, answer_2)
 print(time.time() - start_time)
