@@ -1,14 +1,12 @@
-import time
 from functools import cache
-start_time = time.time()
 puzzle_input = open("inputs/day_14.txt")
 
 EMPTY = "."
 ROUND = "O"
 CUBE = "#"
-field = tuple((*line.strip(),) for line in puzzle_input)
-max_y = len(field) - 1
-max_x = len(field[0]) - 1
+start_field = tuple((*line.strip(),) for line in puzzle_input)
+max_y = len(start_field) - 1
+max_x = len(start_field[0]) - 1
 
 
 def load(field):
@@ -90,36 +88,30 @@ def tilt_east(field):
     return tuple(tuple(row) for row in field)
 
 
-def print_field():
-    for y in range(max_y + 1):
-        for x in range(max_x + 1):
-            print(field[y][x], end="")
-        print("")
-
-
-field = tilt_north(field)
-answer = load(field)
-field = tilt_west(field)
-field = tilt_south(field)
-field = tilt_east(field)
+new_field = tilt_north(start_field)
+answer = load(new_field)
+new_field = tilt_west(new_field)
+new_field = tilt_south(new_field)
+new_field = tilt_east(new_field)
 
 fields = []
 total_cycles = 1_000_000_000
-for i in range(total_cycles):
-    field = tilt_north(field)
-    field = tilt_west(field)
-    field = tilt_south(field)
-    field = tilt_east(field)
+inner_cycles = 1
+while inner_cycles < total_cycles:
+    new_field = tilt_north(new_field)
+    new_field = tilt_west(new_field)
+    new_field = tilt_south(new_field)
+    new_field = tilt_east(new_field)
+    inner_cycles += 1
     if tilt_north.cache_info().hits > 0:
         try:
-            last_hit = len(fields) - fields[::-1].index(field) - 1
+            last_hit = len(fields) - fields[::-1].index(new_field) - 1
             cycle_length = len(fields) - last_hit
             break
         except ValueError:
-            fields.append(field)
+            fields.append(new_field)
 
-remainder = (total_cycles - i - 2) % cycle_length
+remainder = (total_cycles - inner_cycles - 1) % cycle_length
 answer_2 = load(fields[remainder])
 
 print(answer, answer_2)
-print(time.time() - start_time)
