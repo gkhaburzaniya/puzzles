@@ -1,4 +1,4 @@
-puzzle_input = open("inputs/day_14.txt")
+puzzle_input = open("inputs/day_15.txt")
 
 for line in puzzle_input:
     current_value = 0
