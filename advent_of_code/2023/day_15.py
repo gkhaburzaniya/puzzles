@@ -1,8 +1,10 @@
-puzzle_input = open("inputs/day_15.txt")
+puzzle_input = open("inputs/day_15.txt").read()
 
-for line in puzzle_input:
+total_value = 0
+for step in puzzle_input.strip().split(","):
     current_value = 0
-    for char in line.strip():
+    for char in step:
         current_value = ((current_value + ord(char)) * 17) % 256
+    total_value += current_value
 
-print(current_value)
+print(total_value)
