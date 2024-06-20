@@ -1,5 +1,7 @@
 puzzle_input = open("inputs/day_15.txt").read()
 
+INSERT = "="
+
 
 def find_hash(step):
     value = 0
@@ -8,8 +10,23 @@ def find_hash(step):
     return value
 
 
-total_value = 0
+answer = 0
 for item in puzzle_input.strip().split(","):
-    total_value += find_hash(item)
+    answer += find_hash(item)
 
-print(total_value)
+    boxes = [[] for _ in range(256)]
+    # TODO deal with these labels only being the first item in the tuple
+    if INSERT in item:
+        label, focal_length = item.split(INSERT)
+        focal_length = int(focal_length)
+        box = boxes[find_hash(label)]
+        try:
+            box[box.index(label)] = (label, focal_length)
+        except ValueError:
+            boxes[find_hash(label)].append((label, focal_length))
+    else:
+        label = item[:-1]
+        box = boxes[find_hash(label)]
+        del box[box.index(label)]
+
+print(answer)
