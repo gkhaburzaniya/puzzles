@@ -11,10 +11,10 @@ def find_hash(step):
 
 
 answer = 0
+boxes = [[] for _ in range(256)]
 for item in puzzle_input.strip().split(","):
     answer += find_hash(item)
 
-    boxes = [[] for _ in range(256)]
     if INSERT in item:
         label, focal_length = item.split(INSERT)
         focal_length = int(focal_length)
@@ -33,4 +33,10 @@ for item in puzzle_input.strip().split(","):
         except ValueError:
             pass
 
-print(answer)
+answer_2 = 0
+for box_index, box in enumerate(boxes):
+    for slot, lens in enumerate(box):
+        answer_2 += (box_index + 1) * (slot + 1) * lens[1]
+
+
+print(answer, answer_2)
