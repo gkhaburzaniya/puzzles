@@ -15,18 +15,22 @@ for item in puzzle_input.strip().split(","):
     answer += find_hash(item)
 
     boxes = [[] for _ in range(256)]
-    # TODO deal with these labels only being the first item in the tuple
     if INSERT in item:
         label, focal_length = item.split(INSERT)
         focal_length = int(focal_length)
         box = boxes[find_hash(label)]
         try:
-            box[box.index(label)] = (label, focal_length)
+            box_labels = [label for label, _ in box]
+            box[box_labels.index(label)] = (label, focal_length)
         except ValueError:
-            boxes[find_hash(label)].append((label, focal_length))
+            box.append((label, focal_length))
     else:
         label = item[:-1]
         box = boxes[find_hash(label)]
-        del box[box.index(label)]
+        box_labels = [label for label, _ in box]
+        try:
+            del box[box_labels.index(label)]
+        except ValueError:
+            pass
 
 print(answer)
