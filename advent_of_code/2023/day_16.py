@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
+import time
+start = time.time()
 
-puzzle_input = open("inputs/day_16.txt")
+puzzle_input = open("inputs/day_16.txt").read().splitlines()
 
 EMPTY = "."
 UR_MIRROR = "/"
@@ -25,9 +27,16 @@ class Tile:
     passed_beams: set = field(default_factory=set)
 
 
+max_x = len(puzzle_input[0]) - 1
+max_y = len(puzzle_input) - 1
 puzzle = {(x, y): Tile(char)
           for y, line in enumerate(puzzle_input)
-          for x, char in enumerate(line.strip())}
+          for x, char in enumerate(line)}
+
+
+def reset_tiles():
+    for tile in puzzle.values():
+        tile.passed_beams = set()
 
 
 def tiles_energized(starting_beam):
@@ -84,4 +93,30 @@ def tiles_energized(starting_beam):
 
 
 answer = tiles_energized(Beam((0, 0), RIGHT))
-print(answer)
+max_energized_tiles = 0
+
+
+for x in range(max_x + 1):
+    current_tiles_energized = tiles_energized(Beam((x, 0), DOWN))
+    if current_tiles_energized > max_energized_tiles:
+        max_energized_tiles = current_tiles_energized
+    reset_tiles()
+    current_tiles_energized = tiles_energized(Beam((x, max_y), UP))
+    if current_tiles_energized > max_energized_tiles:
+        max_energized_tiles = current_tiles_energized
+    reset_tiles()
+
+for y in range(max_y + 1):
+    current_tiles_energized = tiles_energized(Beam((0, y), RIGHT))
+    if current_tiles_energized > max_energized_tiles:
+        max_energized_tiles = current_tiles_energized
+    reset_tiles()
+    current_tiles_energized = tiles_energized(Beam((max_x, y), LEFT))
+    if current_tiles_energized > max_energized_tiles:
+        max_energized_tiles = current_tiles_energized
+    reset_tiles()
+
+answer_2 = max_energized_tiles
+
+print(answer, answer_2)
+print(time.time() - start)
