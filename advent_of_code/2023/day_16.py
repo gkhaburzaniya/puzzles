@@ -36,7 +36,7 @@ puzzle = {(x, y): Tile(char)
 
 def reset_tiles():
     for tile in puzzle.values():
-        tile.passed_beams = set()
+        tile.passed_beams.clear()
 
 
 def tiles_energized(starting_beam):
