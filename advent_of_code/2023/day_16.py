@@ -1,4 +1,6 @@
 from dataclasses import dataclass, field
+from functools import cache
+
 import time
 start = time.time()
 
@@ -37,6 +39,58 @@ puzzle = {(x, y): Tile(char)
 def reset_tiles():
     for tile in puzzle.values():
         tile.passed_beams.clear()
+
+
+@cache
+def beam_energizes(location, direction):
+    new_beams = []
+    energized = set()
+    try:
+        tile = puzzle[location]
+    except KeyError:
+        return frozenset(energized)
+
+    if tile.symbol == UR_MIRROR:
+        if direction == RIGHT:
+            direction = UP
+        elif direction == LEFT:
+            direction = DOWN
+        elif direction == UP:
+            direction = RIGHT
+        elif direction == DOWN:
+            direction = LEFT
+    elif tile.symbol == UL_MIRROR:
+        if direction == RIGHT:
+            direction = DOWN
+        elif direction == LEFT:
+            direction = UP
+        elif direction == UP:
+            direction = LEFT
+        elif direction == DOWN:
+            direction = RIGHT
+    elif tile.symbol == V_SPLITTER and direction in (RIGHT, LEFT):
+        direction = UP
+        new_beams.append((location, DOWN))
+    elif tile.symbol == H_SPLITTER and (direction in (UP, DOWN)):
+        direction = RIGHT
+        new_beams.append((location, LEFT))
+
+    if direction == RIGHT:
+        location = (location[0] + 1, location[1])
+    elif direction == LEFT:
+        location = (location[0] - 1, location[1])
+    elif direction == UP:
+        location = (location[0], location[1] - 1)
+    elif direction == DOWN:
+        location = (location[0], location[1] + 1)
+    new_beams.append((location, direction))
+    for beam in new_beams:
+        try:
+            energized = energized | beam_energizes(beam[0], beam[1])
+        except RecursionError:
+            reset_tiles()
+            energized = energized | tiles_energized(Beam(beam[0], beam[1]))
+    return frozenset(energized)
 
 
 def tiles_energized(starting_beam):
@@ -89,34 +143,31 @@ def tiles_energized(starting_beam):
             beam.location = (beam.location[0], beam.location[1] + 1)
 
         beams.append(beam)
-    return len(energized_tiles)
+    return energized_tiles
 
 
-answer = tiles_energized(Beam((0, 0), RIGHT))
+answer = len(beam_energizes((0, 0), RIGHT))
 max_energized_tiles = 0
 
 
-for x in range(max_x + 1):
-    current_tiles_energized = tiles_energized(Beam((x, 0), DOWN))
-    if current_tiles_energized > max_energized_tiles:
-        max_energized_tiles = current_tiles_energized
-    reset_tiles()
-    current_tiles_energized = tiles_energized(Beam((x, max_y), UP))
-    if current_tiles_energized > max_energized_tiles:
-        max_energized_tiles = current_tiles_energized
-    reset_tiles()
-
-for y in range(max_y + 1):
-    current_tiles_energized = tiles_energized(Beam((0, y), RIGHT))
-    if current_tiles_energized > max_energized_tiles:
-        max_energized_tiles = current_tiles_energized
-    reset_tiles()
-    current_tiles_energized = tiles_energized(Beam((max_x, y), LEFT))
-    if current_tiles_energized > max_energized_tiles:
-        max_energized_tiles = current_tiles_energized
-    reset_tiles()
-
-answer_2 = max_energized_tiles
-
-print(answer, answer_2)
+# for x in range(max_x + 1):
+#     current_tiles_energized = len(beam_energizes((x, 0), DOWN))
+#     if current_tiles_energized > max_energized_tiles:
+#         max_energized_tiles = current_tiles_energized
+#     current_tiles_energized = len(beam_energizes((x, max_y), UP))
+#     if current_tiles_energized > max_energized_tiles:
+#         max_energized_tiles = current_tiles_energized
+#
+# for y in range(max_y + 1):
+#     current_tiles_energized = len(beam_energizes((0, y), RIGHT))
+#     if current_tiles_energized > max_energized_tiles:
+#         max_energized_tiles = current_tiles_energized
+#     current_tiles_energized = len(beam_energizes((max_x, y), RIGHT))
+#     if current_tiles_energized > max_energized_tiles:
+#         max_energized_tiles = current_tiles_energized
+#
+# answer_2 = max_energized_tiles
+#
+# print(answer, answer_2)
+print(answer)
 print(time.time() - start)
