@@ -41,10 +41,74 @@ def reset_tiles():
         tile.passed_beams.clear()
 
 
+def tiles_energized(starting_beam):
+    beams = [starting_beam]
+    energized_tiles = set()
+    while beams:
+        beam = beams.pop()
+        try:
+            tile = puzzle[beam.location]
+        except KeyError:
+            continue
+
+        if beam.direction in tile.passed_beams:
+            continue
+        tile.passed_beams.add(beam.direction)
+        energized_tiles.add(beam.location)
+
+        if tile.symbol == UR_MIRROR:
+            if beam.direction == RIGHT:
+                beam.direction = UP
+            elif beam.direction == LEFT:
+                beam.direction = DOWN
+            elif beam.direction == UP:
+                beam.direction = RIGHT
+            elif beam.direction == DOWN:
+                beam.direction = LEFT
+        elif tile.symbol == UL_MIRROR:
+            if beam.direction == RIGHT:
+                beam.direction = DOWN
+            elif beam.direction == LEFT:
+                beam.direction = UP
+            elif beam.direction == UP:
+                beam.direction = LEFT
+            elif beam.direction == DOWN:
+                beam.direction = RIGHT
+        elif tile.symbol == V_SPLITTER and beam.direction in (RIGHT, LEFT):
+            beam.direction = UP
+            beams.append(Beam(beam.location, DOWN))
+        elif tile.symbol == H_SPLITTER and (beam.direction in (UP, DOWN)):
+            beam.direction = RIGHT
+            beams.append(Beam(beam.location, LEFT))
+
+        if beam.direction == RIGHT:
+            beam.location = (beam.location[0] + 1, beam.location[1])
+        elif beam.direction == LEFT:
+            beam.location = (beam.location[0] - 1, beam.location[1])
+        elif beam.direction == UP:
+            beam.location = (beam.location[0], beam.location[1] - 1)
+        elif beam.direction == DOWN:
+            beam.location = (beam.location[0], beam.location[1] + 1)
+
+        beams.append(beam)
+    reset_tiles()
+    return len(energized_tiles)
+
+
+class PreemptiveError(Exception):
+    pass
+
+
+splitters_started = set()
+temp_energized = set()
+orig_splitter = None
+
+
 @cache
-def beam_energizes(location, direction, passed_splitters=None):
+def beam_energizes(location, direction):
+    global temp_energized, orig_splitter
+
     energized = set()
-    passed_splitters = set(passed_splitters) if passed_splitters else set()
     start_location, start_direction = location, direction
     while True:
         try:
@@ -72,23 +136,46 @@ def beam_energizes(location, direction, passed_splitters=None):
             elif direction == DOWN:
                 direction = RIGHT
         elif tile.symbol == V_SPLITTER and direction in (RIGHT, LEFT):
-            if location in passed_splitters:
+            if location in splitters_started:
+                orig_splitter = orig_splitter or location
+                temp_energized = energized
+                raise PreemptiveError
+            splitters_started.add(location)
+            try:
+                energized = energized | beam_energizes(location, UP)
+            except PreemptiveError:
+                energized = energized | temp_energized
+            try:
+                energized = energized | beam_energizes(location, DOWN)
+            except PreemptiveError:
+                energized = energized | temp_energized
+            if orig_splitter == location or orig_splitter is None:
+                orig_splitter = None
+                splitters_started.clear()
                 return frozenset(energized)
-            passed_splitters.add(location)
-            energized = energized | beam_energizes(location, UP,
-                                                   frozenset(passed_splitters))
-            energized = energized | beam_energizes(location, DOWN,
-                                                   frozenset(passed_splitters))
-            return frozenset(energized)
+            else:
+                temp_energized = energized
+                raise PreemptiveError
         elif tile.symbol == H_SPLITTER and (direction in (UP, DOWN)):
-            if location in passed_splitters:
+            if location in splitters_started:
+                temp_energized = energized
+                orig_splitter = orig_splitter or location
+            splitters_started.add(location)
+            try:
+                energized = energized | beam_energizes(location, RIGHT)
+            except PreemptiveError:
+                energized = energized | temp_energized
+            try:
+                energized = energized | beam_energizes(location, LEFT)
+            except PreemptiveError:
+                energized = energized | temp_energized
+            if orig_splitter == location or orig_splitter is None:
+                orig_splitter = None
+                splitters_started.clear()
                 return frozenset(energized)
-            passed_splitters.add(location)
-            energized = energized | beam_energizes(location, RIGHT,
-                                                   frozenset(passed_splitters))
-            energized = energized | beam_energizes(location, LEFT,
-                                                   frozenset(passed_splitters))
-            return frozenset(energized)
+            else:
+                temp_energized = energized
+                raise PreemptiveError
 
         if direction == RIGHT:
             location = (location[0] + 1, location[1])
@@ -104,27 +191,26 @@ def beam_energizes(location, direction, passed_splitters=None):
 
 
 answer = len(beam_energizes((0, 0), RIGHT))
-print(answer)
-# max_energized_tiles = 0
-#
-#
-# for x in range(max_x + 1):
-#     current_tiles_energized = len(beam_energizes((x, 0), DOWN))
-#     if current_tiles_energized > max_energized_tiles:
-#         max_energized_tiles = current_tiles_energized
-#     current_tiles_energized = len(beam_energizes((x, max_y), UP))
-#     if current_tiles_energized > max_energized_tiles:
-#         max_energized_tiles = current_tiles_energized
-#
-# for y in range(max_y + 1):
-#     current_tiles_energized = len(beam_energizes((0, y), RIGHT))
-#     if current_tiles_energized > max_energized_tiles:
-#         max_energized_tiles = current_tiles_energized
-#     current_tiles_energized = len(beam_energizes((max_x, y), RIGHT))
-#     if current_tiles_energized > max_energized_tiles:
-#         max_energized_tiles = current_tiles_energized
-#
-# answer_2 = max_energized_tiles
-#
-# print(answer, answer_2)
+max_energized_tiles = 0
+
+
+for x in range(max_x + 1):
+    current_tiles_energized = len(beam_energizes((x, 0), DOWN))
+    if current_tiles_energized > max_energized_tiles:
+        max_energized_tiles = current_tiles_energized
+    current_tiles_energized = len(beam_energizes((x, max_y), UP))
+    if current_tiles_energized > max_energized_tiles:
+        max_energized_tiles = current_tiles_energized
+
+for y in range(max_y + 1):
+    current_tiles_energized = len(beam_energizes((0, y), RIGHT))
+    if current_tiles_energized > max_energized_tiles:
+        max_energized_tiles = current_tiles_energized
+    current_tiles_energized = len(beam_energizes((max_x, y), RIGHT))
+    if current_tiles_energized > max_energized_tiles:
+        max_energized_tiles = current_tiles_energized
+
+answer_2 = max_energized_tiles
+
+print(answer, answer_2)
 print(time.time() - start)
