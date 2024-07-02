@@ -160,6 +160,7 @@ def beam_energizes(location, direction):
             if location in splitters_started:
                 temp_energized = energized
                 orig_splitter = orig_splitter or location
+                raise PreemptiveError
             splitters_started.add(location)
             try:
                 energized = energized | beam_energizes(location, RIGHT)
