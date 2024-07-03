@@ -36,65 +36,6 @@ puzzle = {(x, y): Tile(char)
           for x, char in enumerate(line)}
 
 
-def reset_tiles():
-    for tile in puzzle.values():
-        tile.passed_beams.clear()
-
-
-def tiles_energized(starting_beam):
-    beams = [starting_beam]
-    energized_tiles = set()
-    while beams:
-        beam = beams.pop()
-        try:
-            tile = puzzle[beam.location]
-        except KeyError:
-            continue
-
-        if beam.direction in tile.passed_beams:
-            continue
-        tile.passed_beams.add(beam.direction)
-        energized_tiles.add(beam.location)
-
-        if tile.symbol == UR_MIRROR:
-            if beam.direction == RIGHT:
-                beam.direction = UP
-            elif beam.direction == LEFT:
-                beam.direction = DOWN
-            elif beam.direction == UP:
-                beam.direction = RIGHT
-            elif beam.direction == DOWN:
-                beam.direction = LEFT
-        elif tile.symbol == UL_MIRROR:
-            if beam.direction == RIGHT:
-                beam.direction = DOWN
-            elif beam.direction == LEFT:
-                beam.direction = UP
-            elif beam.direction == UP:
-                beam.direction = LEFT
-            elif beam.direction == DOWN:
-                beam.direction = RIGHT
-        elif tile.symbol == V_SPLITTER and beam.direction in (RIGHT, LEFT):
-            beam.direction = UP
-            beams.append(Beam(beam.location, DOWN))
-        elif tile.symbol == H_SPLITTER and (beam.direction in (UP, DOWN)):
-            beam.direction = RIGHT
-            beams.append(Beam(beam.location, LEFT))
-
-        if beam.direction == RIGHT:
-            beam.location = (beam.location[0] + 1, beam.location[1])
-        elif beam.direction == LEFT:
-            beam.location = (beam.location[0] - 1, beam.location[1])
-        elif beam.direction == UP:
-            beam.location = (beam.location[0], beam.location[1] - 1)
-        elif beam.direction == DOWN:
-            beam.location = (beam.location[0], beam.location[1] + 1)
-
-        beams.append(beam)
-    reset_tiles()
-    return len(energized_tiles)
-
-
 class PreemptiveError(Exception):
     pass
 
@@ -142,13 +83,13 @@ def beam_energizes(location, direction):
                 raise PreemptiveError
             splitters_started.add(location)
             try:
-                energized = energized | beam_energizes(location, UP)
+                energized.update(beam_energizes(location, UP))
             except PreemptiveError:
-                energized = energized | temp_energized
+                energized.update(temp_energized)
             try:
-                energized = energized | beam_energizes(location, DOWN)
+                energized.update(beam_energizes(location, DOWN))
             except PreemptiveError:
-                energized = energized | temp_energized
+                energized.update(temp_energized)
             if orig_splitter == location or orig_splitter is None:
                 orig_splitter = None
                 splitters_started.clear()
@@ -163,13 +104,13 @@ def beam_energizes(location, direction):
                 raise PreemptiveError
             splitters_started.add(location)
             try:
-                energized = energized | beam_energizes(location, RIGHT)
+                energized.update(beam_energizes(location, RIGHT))
             except PreemptiveError:
-                energized = energized | temp_energized
+                energized.update(temp_energized)
             try:
-                energized = energized | beam_energizes(location, LEFT)
+                energized.update(beam_energizes(location, LEFT))
             except PreemptiveError:
-                energized = energized | temp_energized
+                energized.update(temp_energized)
             if orig_splitter == location or orig_splitter is None:
                 orig_splitter = None
                 splitters_started.clear()
