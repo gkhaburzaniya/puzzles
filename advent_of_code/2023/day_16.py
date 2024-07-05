@@ -16,6 +16,23 @@ RIGHT = ">"
 UP = "^"
 DOWN = "v"
 
+TRANSFORM_DICT = {(EMPTY, RIGHT): RIGHT,
+                  (EMPTY, LEFT): LEFT,
+                  (EMPTY, UP): UP,
+                  (EMPTY, DOWN): DOWN,
+                  (UR_MIRROR, RIGHT): UP,
+                  (UR_MIRROR, LEFT): DOWN,
+                  (UR_MIRROR, UP): RIGHT,
+                  (UR_MIRROR, DOWN): LEFT,
+                  (UL_MIRROR, RIGHT): DOWN,
+                  (UL_MIRROR, LEFT): UP,
+                  (UL_MIRROR, UP): LEFT,
+                  (UL_MIRROR, DOWN): RIGHT,
+                  (V_SPLITTER, UP): UP,
+                  (V_SPLITTER, DOWN): DOWN,
+                  (H_SPLITTER, RIGHT): RIGHT,
+                  (H_SPLITTER, LEFT): LEFT}
+
 
 @dataclass
 class Beam:
@@ -58,25 +75,7 @@ def beam_energizes(location, direction):
         except KeyError:
             return frozenset(energized)
 
-        if tile.symbol == UR_MIRROR:
-            if direction == RIGHT:
-                direction = UP
-            elif direction == LEFT:
-                direction = DOWN
-            elif direction == UP:
-                direction = RIGHT
-            elif direction == DOWN:
-                direction = LEFT
-        elif tile.symbol == UL_MIRROR:
-            if direction == RIGHT:
-                direction = DOWN
-            elif direction == LEFT:
-                direction = UP
-            elif direction == UP:
-                direction = LEFT
-            elif direction == DOWN:
-                direction = RIGHT
-        elif tile.symbol == V_SPLITTER and direction in (RIGHT, LEFT):
+        if tile.symbol == V_SPLITTER and direction in (RIGHT, LEFT):
             if location in splitters_started:
                 orig_splitter = orig_splitter or location
                 temp_energized = energized
@@ -118,6 +117,8 @@ def beam_energizes(location, direction):
             else:
                 temp_energized = energized
                 raise PreemptiveError
+        else:
+            direction = TRANSFORM_DICT[(tile.symbol, direction)]
 
         if direction == RIGHT:
             location = (location[0] + 1, location[1])
