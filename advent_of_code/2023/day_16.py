@@ -16,22 +16,39 @@ RIGHT = ">"
 UP = "^"
 DOWN = "v"
 
-TRANSFORM_DICT = {(EMPTY, RIGHT): RIGHT,
-                  (EMPTY, LEFT): LEFT,
-                  (EMPTY, UP): UP,
-                  (EMPTY, DOWN): DOWN,
-                  (UR_MIRROR, RIGHT): UP,
-                  (UR_MIRROR, LEFT): DOWN,
-                  (UR_MIRROR, UP): RIGHT,
-                  (UR_MIRROR, DOWN): LEFT,
-                  (UL_MIRROR, RIGHT): DOWN,
-                  (UL_MIRROR, LEFT): UP,
-                  (UL_MIRROR, UP): LEFT,
-                  (UL_MIRROR, DOWN): RIGHT,
-                  (V_SPLITTER, UP): UP,
-                  (V_SPLITTER, DOWN): DOWN,
-                  (H_SPLITTER, RIGHT): RIGHT,
-                  (H_SPLITTER, LEFT): LEFT}
+
+def right(point):
+    return point[0] + 1, point[1]
+
+
+def left(point):
+    return point[0] - 1, point[1]
+
+
+def up(point):
+    return point[0], point[1] - 1
+
+
+def down(point):
+    return point[0], point[1] + 1
+
+
+TRANSFORM_DICT = {(EMPTY, RIGHT): (RIGHT, right),
+                  (EMPTY, LEFT): (LEFT, left),
+                  (EMPTY, UP): (UP, up),
+                  (EMPTY, DOWN): (DOWN, down),
+                  (UR_MIRROR, RIGHT): (UP, up),
+                  (UR_MIRROR, LEFT): (DOWN, down),
+                  (UR_MIRROR, UP): (RIGHT, right),
+                  (UR_MIRROR, DOWN): (LEFT, left),
+                  (UL_MIRROR, RIGHT): (DOWN, down),
+                  (UL_MIRROR, LEFT): (UP, up),
+                  (UL_MIRROR, UP): (LEFT, left),
+                  (UL_MIRROR, DOWN): (RIGHT, right),
+                  (V_SPLITTER, UP): (UP, up),
+                  (V_SPLITTER, DOWN): (DOWN, down),
+                  (H_SPLITTER, RIGHT): (RIGHT, right),
+                  (H_SPLITTER, LEFT): (LEFT, left)}
 
 
 @dataclass
@@ -118,16 +135,8 @@ def beam_energizes(location, direction):
                 temp_energized = energized
                 raise PreemptiveError
         else:
-            direction = TRANSFORM_DICT[(tile.symbol, direction)]
-
-        if direction == RIGHT:
-            location = (location[0] + 1, location[1])
-        elif direction == LEFT:
-            location = (location[0] - 1, location[1])
-        elif direction == UP:
-            location = (location[0], location[1] - 1)
-        elif direction == DOWN:
-            location = (location[0], location[1] + 1)
+            direction, change = TRANSFORM_DICT[(tile.symbol, direction)]
+            location = change(location)
 
         if (location, direction) == (start_location, start_direction):
             return frozenset(energized)
