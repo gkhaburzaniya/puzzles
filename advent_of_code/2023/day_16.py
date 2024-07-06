@@ -15,6 +15,8 @@ LEFT = "<"
 RIGHT = ">"
 UP = "^"
 DOWN = "v"
+RIGHTLEFT = RIGHT + LEFT
+UPDOWN = UP + DOWN
 
 
 def right(point):
@@ -92,7 +94,7 @@ def beam_energizes(location, direction):
         except KeyError:
             return frozenset(energized)
 
-        if tile.symbol == V_SPLITTER and direction in (RIGHT, LEFT):
+        if tile.symbol == V_SPLITTER and direction in RIGHTLEFT:
             if location in splitters_started:
                 orig_splitter = orig_splitter or location
                 temp_energized = energized
@@ -113,7 +115,7 @@ def beam_energizes(location, direction):
             else:
                 temp_energized = energized
                 raise PreemptiveError
-        elif tile.symbol == H_SPLITTER and (direction in (UP, DOWN)):
+        elif tile.symbol == H_SPLITTER and direction in UPDOWN:
             if location in splitters_started:
                 temp_energized = energized
                 orig_splitter = orig_splitter or location
