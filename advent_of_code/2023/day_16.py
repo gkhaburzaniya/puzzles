@@ -17,6 +17,7 @@ UP = "^"
 DOWN = "v"
 RIGHTLEFT = RIGHT + LEFT
 UPDOWN = UP + DOWN
+SPLITTER = V_SPLITTER + H_SPLITTER
 
 
 def right(point):
@@ -51,6 +52,9 @@ TRANSFORM_DICT = {(EMPTY, RIGHT): (RIGHT, right),
                   (V_SPLITTER, DOWN): (DOWN, down),
                   (H_SPLITTER, RIGHT): (RIGHT, right),
                   (H_SPLITTER, LEFT): (LEFT, left)}
+
+SPLITTER_TRANSFORM_IN = {V_SPLITTER: RIGHTLEFT, H_SPLITTER: UPDOWN}
+SPLITTER_TRANSFORM_OUT = {V_SPLITTER: UPDOWN, H_SPLITTER: RIGHTLEFT}
 
 
 @dataclass
@@ -93,46 +97,22 @@ def beam_energizes(location, direction):
             energized.add(location)
         except KeyError:
             return frozenset(energized)
-        
+
         try:
             direction, change = TRANSFORM_DICT[(tile.symbol, direction)]
             location = change(location)
         except KeyError:
-            if tile.symbol == V_SPLITTER and direction in RIGHTLEFT:
+            if tile.symbol in SPLITTER and direction in SPLITTER_TRANSFORM_IN[tile.symbol]:
                 if location in splitters_started:
                     orig_splitter = orig_splitter or location
                     temp_energized = energized
                     raise PreemptiveError
                 splitters_started.add(location)
-                try:
-                    energized.update(beam_energizes(location, UP))
-                except PreemptiveError:
-                    energized.update(temp_energized)
-                try:
-                    energized.update(beam_energizes(location, DOWN))
-                except PreemptiveError:
-                    energized.update(temp_energized)
-                if orig_splitter == location or orig_splitter is None:
-                    orig_splitter = None
-                    splitters_started.clear()
-                    return frozenset(energized)
-                else:
-                    temp_energized = energized
-                    raise PreemptiveError
-            elif tile.symbol == H_SPLITTER and direction in UPDOWN:
-                if location in splitters_started:
-                    temp_energized = energized
-                    orig_splitter = orig_splitter or location
-                    raise PreemptiveError
-                splitters_started.add(location)
-                try:
-                    energized.update(beam_energizes(location, RIGHT))
-                except PreemptiveError:
-                    energized.update(temp_energized)
-                try:
-                    energized.update(beam_energizes(location, LEFT))
-                except PreemptiveError:
-                    energized.update(temp_energized)
+                for new_direction in SPLITTER_TRANSFORM_OUT[tile.symbol]:
+                    try:
+                        energized.update(beam_energizes(location, new_direction))
+                    except PreemptiveError:
+                        energized.update(temp_energized)
                 if orig_splitter == location or orig_splitter is None:
                     orig_splitter = None
                     splitters_started.clear()
