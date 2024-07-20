@@ -17,7 +17,6 @@ UP = "^"
 DOWN = "v"
 RIGHTLEFT = RIGHT + LEFT
 UPDOWN = UP + DOWN
-SPLITTER = V_SPLITTER + H_SPLITTER
 
 
 def right(point):
@@ -102,7 +101,7 @@ def beam_energizes(location, direction):
             direction, change = TRANSFORM_DICT[(tile.symbol, direction)]
             location = change(location)
         except KeyError:
-            if tile.symbol in SPLITTER and direction in SPLITTER_TRANSFORM_IN[tile.symbol]:
+            if direction in SPLITTER_TRANSFORM_IN[tile.symbol]:
                 if location in splitters_started:
                     orig_splitter = orig_splitter or location
                     temp_energized = energized
