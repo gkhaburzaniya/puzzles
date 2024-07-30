@@ -1,3 +1,5 @@
+#!/usr/bin/pypy
+
 from dataclasses import dataclass, field
 from functools import cache
 
