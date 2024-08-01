@@ -1,3 +1,8 @@
+#!/usr/bin/python3.12
+
+import time
+start = time.time()
+
 puzzle_input = open("inputs/day_2.txt")
 
 red = 12
@@ -31,4 +36,5 @@ for i, game in enumerate(puzzle_input):
         total += game_id
     total_2 += min_red * min_green * min_blue
 
+print(time.time() - start)
 print(total, total_2)
