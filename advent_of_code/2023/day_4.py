@@ -1,3 +1,9 @@
+#!/usr/bin/python3.12
+
+import time
+
+start = time.time()
+
 puzzle_input = open("inputs/day_4.txt").readlines()
 
 total = 0
@@ -26,3 +32,4 @@ for i, line in enumerate(puzzle_input):
 total_2 = sum(instances)
 
 print(total, total_2)
+print(time.time() - start)
