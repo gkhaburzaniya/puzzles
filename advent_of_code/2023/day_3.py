@@ -4,7 +4,6 @@ import time
 
 from dataclasses import dataclass
 
-
 start = time.time()
 
 puzzle_input = open("inputs/day_3.txt")

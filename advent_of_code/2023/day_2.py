@@ -1,6 +1,7 @@
 #!/usr/bin/python3.12
 
 import time
+
 start = time.time()
 
 puzzle_input = open("inputs/day_2.txt")

@@ -1,7 +1,7 @@
 #!/usr/bin/python3.12
 
-import time
 import math
+import time
 
 start = time.time()
 

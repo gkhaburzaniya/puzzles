@@ -1,6 +1,10 @@
-import itertools
+#!/usr/bin/pypy
+
+import time
 
 from dataclasses import dataclass
+
+start = time.time()
 
 puzzle_input = open("inputs/day_5.txt")
 
@@ -88,9 +92,9 @@ for line in puzzle_input:
                 seeds.append(int(word))
         for i, word in enumerate(words[1:]):
             if i % 2 == 0:
-                start = int(word)
+                word_start = int(word)
             else:
-                seeds_2.append((start, start + int(word)))
+                seeds_2.append((start, word_start + int(word)))
         continue
 
     destination_start, sourse_start, length = (
@@ -239,4 +243,5 @@ for length in ranges:
     if answer_2:
         break
 
+print(time.time() - start)
 print(answer, answer_2)
