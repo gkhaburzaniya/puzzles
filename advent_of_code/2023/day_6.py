@@ -1,5 +1,10 @@
+#!/usr/bin/python3.12
+
+import time as t
+
 from math import sqrt, floor, ceil
 
+start = t.time()
 
 puzzle_input = open("inputs/day_6.txt").readlines()
 
@@ -30,4 +35,6 @@ record = int(record)
 min_to_beat = ceil((time - sqrt(time**2 - 4 * record))/2)
 max_to_beat = floor((time + sqrt(time**2 - 4 * record))/2)
 ways_to_beat = max_to_beat - min_to_beat + 1
+
+print(t.time() - start)
 print(multiple, ways_to_beat)
