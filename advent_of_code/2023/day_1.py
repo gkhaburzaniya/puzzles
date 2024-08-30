@@ -1,9 +1,4 @@
-#!/usr/bin/python3.12
-
 import math
-import time
-
-start = time.time()
 
 puzzle_input = open("inputs/day_1.txt")
 
@@ -45,5 +40,4 @@ for line in puzzle_input:
     total += solve(DIGITS, line)
     total_2 += solve(DIGITS_2, line)
 
-print(time.time() - start)
 print(total, total_2)
