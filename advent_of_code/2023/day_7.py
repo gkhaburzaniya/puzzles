@@ -1,11 +1,5 @@
-#!/usr/bin/python3.12
-
-import time
-
 from collections import defaultdict
 from dataclasses import dataclass
-
-start = time.time()
 
 puzzle_input = open("inputs/day_7.txt")
 
@@ -102,5 +96,4 @@ for i, hand in enumerate(hands):
 for i, hand in enumerate(hands_2):
     winnings_2 += hand.bid * (i+1)
 
-print(time.time() - start)
 print(winnings, winnings_2)

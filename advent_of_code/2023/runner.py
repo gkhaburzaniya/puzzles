@@ -1,6 +1,9 @@
 import subprocess
+import sys
 import time
 
+day = sys.argv[1]
+
 start = time.time()
-subprocess.run(["python", "day_1.py"])
+subprocess.run(["python", f"day_{day}.py"])
 print(time.time() - start)
