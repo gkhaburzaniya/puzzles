@@ -1,9 +1,12 @@
 import subprocess
-import sys
 import time
 
-day = sys.argv[1]
+pypy_days = [11, 16]
 
-start = time.time()
-subprocess.run(["python", f"day_{day}.py"])
-print(time.time() - start)
+for day in range(1, 17):
+    start = time.time()
+    subprocess.run(["python3.12", f"day_{day}.py"])
+    print(f"Day: {day} python3.12: {time.time() - start}")
+    start = time.time()
+    subprocess.run(["pypy", f"day_{day}.py"])
+    print(f"Day: {day} pypy: {time.time() - start}")

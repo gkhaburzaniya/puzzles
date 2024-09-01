@@ -1,10 +1,5 @@
-#!/usr/bin/pypy
-
 from dataclasses import dataclass, field
 from functools import cache
-
-import time
-start = time.time()
 
 puzzle_input = open("inputs/day_16.txt").read().splitlines()
 
@@ -149,4 +144,3 @@ for y in range(max_y + 1):
 answer_2 = max_energized_tiles
 
 print(answer, answer_2)
-print(time.time() - start)
