@@ -1,5 +1,3 @@
-import itertools
-
 from dataclasses import dataclass
 
 puzzle_input = open("inputs/day_5.txt")
